@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Digitec_Api.Core;
+using System;
 
 namespace Digitec_Api
 {
@@ -6,7 +7,10 @@ namespace Digitec_Api
     {
         public static void GetProductInfo(string productUrl)
         {
+            if (Validation.IsValidDigitecUrl(productUrl))
+            {
 
+            }
         }
     }
 }
