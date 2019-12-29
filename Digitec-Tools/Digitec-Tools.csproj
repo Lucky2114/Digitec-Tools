@@ -5,4 +5,12 @@
     <RootNamespace>Digitec_Tools</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Digitec-Api\Digitec-Api.csproj" />
+  </ItemGroup>
+
 </Project>
