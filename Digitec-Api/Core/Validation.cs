@@ -18,7 +18,7 @@ namespace Digitec_Api.Core
                 return false;
             }
 
-            return uri.Host.Equals("digitec", StringComparison.OrdinalIgnoreCase) && uri.AbsolutePath.Contains("/product/");
+            return uri.Host.Equals("www.digitec.ch", StringComparison.OrdinalIgnoreCase) && uri.AbsolutePath.Contains("/product/");
         }
     }
 }

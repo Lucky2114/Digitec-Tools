@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitec-Tools", "Digitec-Tools\Digitec-Tools.csproj", "{B336697E-120A-45BE-8E04-0C6E5B0157C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools", "Digitec-Tools\Digitec-Tools.csproj", "{B336697E-120A-45BE-8E04-0C6E5B0157C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitec-Api", "Digitec-Api\Digitec-Api.csproj", "{4AB56FC0-A659-447F-B125-83D1541A7C81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Api", "Digitec-Api\Digitec-Api.csproj", "{4AB56FC0-A659-447F-B125-83D1541A7C81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitec-Api-Testing", "Digitec-Api-Testing\Digitec-Api-Testing.csproj", "{44C5D581-9C67-445B-8ECF-12CB693A739E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4AB56FC0-A659-447F-B125-83D1541A7C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AB56FC0-A659-447F-B125-83D1541A7C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AB56FC0-A659-447F-B125-83D1541A7C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C5D581-9C67-445B-8ECF-12CB693A739E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C5D581-9C67-445B-8ECF-12CB693A739E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C5D581-9C67-445B-8ECF-12CB693A739E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C5D581-9C67-445B-8ECF-12CB693A739E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
