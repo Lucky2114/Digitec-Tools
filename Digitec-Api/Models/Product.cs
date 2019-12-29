@@ -10,5 +10,6 @@ namespace Digitec_Api.Models
         public string Brand { get; set; }
         public string PriceCurrent { get; set; }
         public string PriceOld { get; set; }
+        public string ProductId { get; set; }
     }
 }

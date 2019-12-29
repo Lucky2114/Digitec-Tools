@@ -14,29 +14,27 @@ namespace Digitec_Api
             if (Validation.IsValidDigitecUrl(productUrl))
             {
                 var doc = await HttpHelper.GetDocument(productUrl);
-                var _productTitleNode = doc.DocumentNode.Descendants().Where(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductNameClasses)).First();
+                var productTitleNode = doc.DocumentNode.Descendants().First(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductNameClasses));
 
-                string _brand = _productTitleNode.Descendants("strong").TryFirst().InnerText;
-                string _productName = _productTitleNode.Descendants("span").TryFirst().InnerText;
+                string brand = productTitleNode.Descendants("strong").TryFirst().InnerText;
+                string productName = productTitleNode.Descendants("span").TryFirst().InnerText;
 
-                var _productPriceNode = doc.DocumentNode.Descendants().Where(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductPriceClasses)).First();
+                var productPriceNode = doc.DocumentNode.Descendants().First(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductPriceClasses));
 
-                string _priceCurrent = _productPriceNode.Descendants("strong").TryFirst().InnerText;
-                string _priceOld = _productPriceNode.Descendants("span").TryFirst().InnerText;
+                string priceCurrent = productPriceNode.Descendants("strong").TryFirst().InnerText;
+                string priceOld = productPriceNode.Descendants("span").TryFirst().InnerText;
 
                 Product productInfo = new Product()
                 {
-                    Brand = _brand.Trim(),
-                    Name = _productName.Trim(),
-                    PriceCurrent = _priceCurrent.Trim(),
-                    PriceOld = _priceOld.Trim()
+                    Brand = brand.Trim(),
+                    Name = productName.Trim(),
+                    PriceCurrent = priceCurrent.Trim(),
+                    PriceOld = priceOld.Trim(),
+                    ProductId = productUrl
                 };
                 return await Task.FromResult(productInfo);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

@@ -1,12 +1,34 @@
 ﻿@page "/"
+@using Digitec_Tools.Data
+
+<div class="d-flex align-items-center min-vh-100">
+    <div class="container">
+        <EditForm Model="@PriceChangeModel" OnValidSubmit="@OnValidSubmit">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+
+            <InputText class="form-control" id="product" @bind-Value="@PriceChangeModel.ProductUrl" placeholder="Product Url"/>
+            <br/>
+            <InputText class="form-control" id="email" @bind-Value="@PriceChangeModel.Email" placeholder="Your E-Mail Address"/>
+            <br/>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </EditForm>
+    </div>
+</div>
 
 
 @code {
+    private PriceChangeModel PriceChangeModel;
 
-    protected override async Task OnInitializedAsync()
+    private void OnValidSubmit()
     {
-
         
-
     }
+
+    protected override void OnInitialized()
+    {
+        PriceChangeModel = new PriceChangeModel();
+        base.OnInitialized();
+    }
+
 }
