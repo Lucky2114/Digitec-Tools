@@ -7,6 +7,6 @@ namespace Digitec_Api.Config
     internal static class DigitecWebConstatnts
     {
         internal static string[] ProductNameClasses = { "productName", "ZZej" };
-        internal static string[] ProductPriceClasses = { "ZZec", "ZZea", "ZZed" };
+        internal static string[] ProductPriceClasses = { "ZZim" };
     }
 }

@@ -20,9 +20,9 @@
 @code {
     private PriceChangeModel PriceChangeModel;
 
-    private void OnValidSubmit()
+    private async Task OnValidSubmit()
     {
-        
+        await Tools.RegisterNewProduct(PriceChangeModel.ProductUrl, PriceChangeModel.Email);
     }
 
     protected override void OnInitialized()

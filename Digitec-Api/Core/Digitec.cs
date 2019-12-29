@@ -19,6 +19,7 @@ namespace Digitec_Api
                 string brand = productTitleNode.Descendants("strong").TryFirst().InnerText;
                 string productName = productTitleNode.Descendants("span").TryFirst().InnerText;
 
+
                 var productPriceNode = doc.DocumentNode.Descendants().First(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductPriceClasses));
 
                 string priceCurrent = productPriceNode.Descendants("strong").TryFirst().InnerText;

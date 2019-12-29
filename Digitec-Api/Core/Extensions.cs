@@ -17,7 +17,8 @@ namespace Digitec_Api.Core
             }
             catch
             {
-                return new HtmlNode(HtmlNodeType.Element, null, 0);
+                var _virtualDocument = new HtmlDocument();
+                return _virtualDocument.CreateElement("dmy");
             }
         }
     }
