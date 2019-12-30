@@ -11,4 +11,5 @@ Click on Generate New Private Key
 Save the file somewhere LOCALLY. Don't publish it!
 Export the absolute path to the json into the Environment Variable GOOGLE_APPLICATION_CREDENTIALS.
 
-Windows: SET GOOGLE_APPLICATION_CREDENTIALS=[PATH-TO-JSON]
+Windows Powershell: $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\username\Downloads\service-account-file.json"
+Login and out of your pc.
