@@ -29,15 +29,21 @@
             <InputText class="form-control" id="email" @bind-Value="@PriceChangeModel.Email" placeholder="Your E-Mail Address" />
             <br />
 
-            <button class="btn btn-primary" type="submit" disabled=@disabled>
+            <button class="btn btn-primary" style="transition: width 1s;" type="submit" disabled=@disabled>
                 @if (spin)
                 {
-                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                    <p>Loading..</p>
+                    <div class="row btn-loading">
+                        <div class="col-xs-6">
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-xs-6">
+                            <div>Loading..</div>
+                        </div>
+                    </div>
                 }
                 else
                 {
-                    <p>Submit</p>
+                    <div>Submit</div>
                 }
             </button>
         </EditForm>
@@ -53,12 +59,12 @@
     private bool spin = false;
     private bool disabled = false;
 
-
     private async Task OnValidSubmit()
     {
         //update button state
         spin = true;
         disabled = true;
+        this.StateHasChanged();
 
         var result = await Tools.RegisterNewProduct(PriceChangeModel.ProductUrl, PriceChangeModel.Email);
         spin = false;
