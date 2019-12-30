@@ -64,7 +64,6 @@
         //update button state
         spin = true;
         disabled = true;
-        this.StateHasChanged();
 
         var result = await Tools.RegisterNewProduct(PriceChangeModel.ProductUrl, PriceChangeModel.Email);
         spin = false;

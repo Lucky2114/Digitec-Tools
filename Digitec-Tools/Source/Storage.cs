@@ -37,8 +37,6 @@ namespace Digitec_Tools.Source
 
                 await document.SetAsync(data);
 
-
-
                 var userCollection = document.Collection("Users");
                 var userDocument = userCollection.Document(userData.Email);
 
