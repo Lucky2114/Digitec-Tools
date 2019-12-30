@@ -13,17 +13,19 @@ namespace Digitec_Api
         {
             if (Validation.IsValidDigitecUrl(productUrl))
             {
+                //Problem: CSS classes are randomized => use index
+
                 var doc = await HttpHelper.GetDocument(productUrl);
-                var productTitleNode = doc.DocumentNode.Descendants().First(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductNameClasses));
+                var productTitleNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("h1").ToList()[DigitecWebConstatnts.ProductNameH1Index];
 
                 string brand = productTitleNode.Descendants("strong").TryFirst().InnerText;
                 string productName = productTitleNode.Descendants("span").TryFirst().InnerText;
 
 
-                var productPriceNode = doc.DocumentNode.Descendants().First(x => x.GetClasses().SequenceEqual(DigitecWebConstatnts.ProductPriceClasses));
+                var productPriceNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("div").ToList()[DigitecWebConstatnts.ProductPriceDivIndex];
 
                 string priceCurrent = productPriceNode.Descendants("strong").TryFirst().InnerText;
-                string priceOld = productPriceNode.Descendants("span").TryFirst().InnerText;
+                string priceOld = productPriceNode.Descendants("span").Where(x => x.HasClass(DigitecWebConstatnts.ProductPriceOldClassName)).TryFirst().InnerText;
 
                 Product productInfo = new Product()
                 {

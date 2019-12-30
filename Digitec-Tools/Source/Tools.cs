@@ -8,10 +8,6 @@ namespace Digitec_Tools.Source
     {
         public static async Task RegisterNewProduct(string productUrl, string email)
         {
-            //Every Product is a key.
-            //each Product has a list of email addresses.
-            
-            //TODO Add Data Storage
             var _product = await Digitec.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 

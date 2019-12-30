@@ -24,24 +24,29 @@ namespace Digitec_Tools.Source
             var collection = database.Collection("Products");
             var document = collection.Document(product.ProductIdSimple);
 
-            //TODO document need to contain:
-            // -values of the product (name, brand etc)
-            // -list of users
-
-            //if the product already exists, add the user to the collection. (check for existing there first)
-            var existing = await document.GetSnapshotAsync();
-            if (!existing.Exists)
+            Dictionary<string, object> data = new Dictionary<string, object>
             {
-                Dictionary<string, object> data = new Dictionary<string, object>
-                {
-                    { "Name", product.Name },
-                    { "Brand", product.Brand },
-                    { "UserEmail", userData.Email },
-                    { "UserIPv4", userData.IPv4 }
-                };
+                { "Name", product.Name },
+                { "Brand", product.Brand },
+                { "PriceCurrent", product.PriceCurrent },
+                { "PriceOld", product.PriceOld },
+                { "ProductIdSimple", product.ProductIdSimple }
+            };
 
-                await document.SetAsync(data);
-            }
+            await document.SetAsync(data);
+
+
+
+            var userCollection = document.Collection("Users");
+            var userDocument = userCollection.Document(userData.Email);
+
+            Dictionary<string, object> userDocData = new Dictionary<string, object>
+            {
+                { "Email", userData.Email},
+                { "IPv4", userData.IPv4}
+            };
+
+            await userDocument.SetAsync(userDocData);
         }
     }
 }
