@@ -27,8 +27,5 @@ namespace Digitec_Tools.Source
 
             var documentReference = await collection.AddAsync(data);
         }
-
-
-        
     }
 }
