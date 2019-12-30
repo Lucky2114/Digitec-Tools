@@ -16,37 +16,45 @@ namespace Digitec_Tools.Source
             database = FirestoreDb.Create("digitec-tools");
         }
 
-        public async Task AddNewProduct(Product product, UserData userData)
+        public async Task<bool> AddNewProduct(Product product, UserData userData)
         {
-            if (product.ProductIdSimple.Equals(""))
-                throw new Exception("Product contains no Id");
-
-            var collection = database.Collection("Products");
-            var document = collection.Document(product.ProductIdSimple);
-
-            Dictionary<string, object> data = new Dictionary<string, object>
+            try
             {
-                { "Name", product.Name },
-                { "Brand", product.Brand },
-                { "PriceCurrent", product.PriceCurrent },
-                { "PriceOld", product.PriceOld },
-                { "ProductIdSimple", product.ProductIdSimple }
-            };
+                if (product.ProductIdSimple.Equals(""))
+                    throw new Exception("Product contains no Id");
 
-            await document.SetAsync(data);
+                var collection = database.Collection("Products");
+                var document = collection.Document(product.ProductIdSimple);
+
+                Dictionary<string, object> data = new Dictionary<string, object>
+                {
+                    { "Name", product.Name },
+                    { "Brand", product.Brand },
+                    { "PriceCurrent", product.PriceCurrent },
+                    { "PriceOld", product.PriceOld },
+                    { "ProductIdSimple", product.ProductIdSimple }
+                };
+
+                await document.SetAsync(data);
 
 
 
-            var userCollection = document.Collection("Users");
-            var userDocument = userCollection.Document(userData.Email);
+                var userCollection = document.Collection("Users");
+                var userDocument = userCollection.Document(userData.Email);
 
-            Dictionary<string, object> userDocData = new Dictionary<string, object>
+                Dictionary<string, object> userDocData = new Dictionary<string, object>
+                {
+                    { "Email", userData.Email},
+                    { "IPv4", userData.IPv4}
+                };
+
+                await userDocument.SetAsync(userDocData);
+                return await Task.FromResult(true);
+            }
+            catch
             {
-                { "Email", userData.Email},
-                { "IPv4", userData.IPv4}
-            };
-
-            await userDocument.SetAsync(userDocData);
+                return await Task.FromResult(false);
+            }
         }
     }
 }

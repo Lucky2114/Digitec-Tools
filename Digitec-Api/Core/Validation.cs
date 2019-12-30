@@ -12,9 +12,10 @@ namespace Digitec_Api.Core
             try
             {
                 uri = new Uri(url);
-            } catch
+            }
+            catch
             {
-                //Url is not even in the correct format
+                //Url is not in the correct format
                 return false;
             }
 

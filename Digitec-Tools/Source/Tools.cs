@@ -6,12 +6,13 @@ namespace Digitec_Tools.Source
 {
     public static class Tools
     {
-        public static async Task RegisterNewProduct(string productUrl, string email)
+        public static async Task<bool> RegisterNewProduct(string productUrl, string email)
         {
             var _product = await Digitec.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 
-            await new Storage().AddNewProduct(_product, userData);
+            var _storage = new Storage();
+            return await _storage.AddNewProduct(_product, userData);
         }
     }
 }
