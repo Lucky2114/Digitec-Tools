@@ -8,7 +8,6 @@ namespace Digitec_Api.Core
 {
     internal class HttpHelper
     {
-        //TODO Add downloading (and parsing?) methods here.
         internal static async Task<HtmlDocument> GetDocument(string url)
         {
             //url has to be tested here

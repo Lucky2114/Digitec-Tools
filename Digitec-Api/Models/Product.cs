@@ -11,5 +11,6 @@ namespace Digitec_Api.Models
         public string PriceCurrent { get; set; }
         public string PriceOld { get; set; }
         public string ProductId { get; set; }
+        public string ProductIdSimple { get; set; }
     }
 }
