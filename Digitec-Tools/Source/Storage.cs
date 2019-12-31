@@ -13,6 +13,7 @@ namespace Digitec_Tools.Source
 
         public Storage()
         {
+            
             database = FirestoreDb.Create("digitec-tools");
         }
 

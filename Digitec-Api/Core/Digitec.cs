@@ -1,7 +1,6 @@
 ﻿using Digitec_Api.Config;
 using Digitec_Api.Core;
 using Digitec_Api.Models;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,7 +20,18 @@ namespace Digitec_Api
                 string brand = productTitleNode.Descendants("strong").TryFirst().InnerText;
                 string productName = productTitleNode.Descendants("span").TryFirst().InnerText;
 
-
+                //There could be a progress bar (when the product is on sale)
+                //remove it.
+                try
+                {
+                    var pbar = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("strong").First(x => x.InnerText.StartsWith("noch"));
+                    if (pbar != null)
+                        pbar.ParentNode.Remove();
+                }
+                catch
+                {
+                    //ignored (there is no progress bar. continue)
+                }
                 var productPriceNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("div").ToList()[DigitecWebConstatnts.ProductPriceDivIndex];
 
                 string priceCurrent = productPriceNode.Descendants("strong").TryFirst().InnerText;
