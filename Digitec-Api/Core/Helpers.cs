@@ -11,7 +11,7 @@ namespace Digitec_Api.Core
         {
             if (Validation.IsValidDigitecUrl(url))
             {
-                return url.Split("-").Last();
+                return url.Split("-").Last().Split("?").First();
             }
             return "";
         }
