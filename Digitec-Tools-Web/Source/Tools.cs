@@ -2,7 +2,7 @@
 using Digitec_Api;
 using Digitec_Api.Models;
 
-namespace Digitec_Tools.Source
+namespace Digitec_Tools_Web.Source
 {
     public static class Tools
     {

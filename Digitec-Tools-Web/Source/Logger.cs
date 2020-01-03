@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Digitec_Tools.Source
+namespace Digitec_Tools_Web.Source
 {
     public class Logger
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Digitec_Tools.Source
+namespace Digitec_Tools_Web.Source
 {
     public class Storage
     {
@@ -47,8 +47,8 @@ namespace Digitec_Tools.Source
                     { "IPv4", userData.IPv4}
                 };
 
-                await userDocument.SetAsync(userDocData);
-                return await Task.FromResult(true);
+                var result = await userDocument.SetAsync(userDocData);
+                return result != null;
             }
             catch
             {
