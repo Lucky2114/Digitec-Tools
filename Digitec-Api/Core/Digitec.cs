@@ -44,7 +44,8 @@ namespace Digitec_Api
                     PriceCurrent = priceCurrent.Trim(),
                     PriceOld = priceOld.Trim(),
                     ProductId = productUrl,
-                    ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl)
+                    ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
+                    Url = productUrl,
                 };
                 return await Task.FromResult(productInfo);
             }

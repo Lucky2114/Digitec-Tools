@@ -2,7 +2,7 @@
 
 namespace Digitec_Tools_Web.Data
 {
-    public class PriceChangeModel
+    public class RegisterProductModel
     {
         [Required]
         [Url]

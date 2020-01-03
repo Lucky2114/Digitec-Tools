@@ -46,7 +46,8 @@ namespace Digitec_Tools_Web.Source
                     {"Brand", product.Brand},
                     {"PriceCurrent", product.PriceCurrent},
                     {"PriceOld", product.PriceOld},
-                    {"ProductIdSimple", product.ProductIdSimple}
+                    {"ProductIdSimple", product.ProductIdSimple},
+                    {"Url", product.Url}
                 };
 
                 await document.SetAsync(data);
@@ -72,6 +73,8 @@ namespace Digitec_Tools_Web.Source
         public async Task<List<Product>> GetProductsForUser()
         {
             //TODO Is there some way to do this cleaner? With queries?
+
+
             var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
             if (!user.Identity.IsAuthenticated)
@@ -79,17 +82,25 @@ namespace Digitec_Tools_Web.Source
 
             var res = new List<Product>();
             //Select from firestore where user collection contains user.Name
-            var productCollectionReference = _database.Collection("Products");
-            var products = await productCollectionReference.ListDocumentsAsync().ToList();
-            foreach (var product in products)
+
+            var query = _database.CollectionGroup("Users").WhereEqualTo("Email", user.Identity.Name);
+            var querySnapshot = await query.GetSnapshotAsync();
+            var matchedUsers = querySnapshot.Documents.ToList();
+            
+            foreach (var matchedUser in matchedUsers)
             {
-                var users = await product.Collection("Users").ListDocumentsAsync().ToList();
-                var email = user.Identity.Name;
-                var matches = users.Where(x => x.Id == email).ToList();
-                if (matches.Count > 0)
+                var product = await matchedUser.Reference.Parent.Parent.GetSnapshotAsync();
+                product.TryGetValue("ProductIdSimple", out string id);
+                product.TryGetValue("Brand", out string brand);
+                product.TryGetValue("Name", out string name);
+                product.TryGetValue("Url", out string url);
+                res.Add(new Product()
                 {
-                    res.Add(new Product() {ProductIdSimple = product.Id});
-                }
+                    ProductIdSimple = id,
+                    Brand = brand,
+                    Url = url,
+                    Name = name
+                });
             }
 
             return await Task.FromResult(res);

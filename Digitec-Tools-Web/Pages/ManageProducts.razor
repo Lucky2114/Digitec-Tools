@@ -21,7 +21,7 @@
                 <td>@item.ProductIdSimple</td>
                 <td>
                     <strong>@item.Brand</strong> @item.Name</td>
-                <td>@item.Link</td>
+                <td>@item.Url</td>
                 <td>
                     <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
                 </td>
@@ -31,10 +31,21 @@
     </table>
 
     <button class="btn btn-primary" @onclick="ShowModal">Add</button>
+    @if (_displayError)
+    {
+        <br/>
+        <p class="text-danger">An Error occured while trying to register the product. Sorry about that.</p>
+    }
+    else
+    {
+        <br/>
+        <p class="text-success">Product Sucessfully Registered!</p>
+    }
 </div>
 
 @code {
     private List<Product> _products = new List<Product>();
+    private bool _displayError = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -67,7 +78,12 @@
         if (!modalResult.Cancelled)
         {
             await UpdateProductsTable();
+            _displayError = false;
+            StateHasChanged();
+            return;
         }
+        _displayError = true;
+        StateHasChanged();
     }
 
 }
