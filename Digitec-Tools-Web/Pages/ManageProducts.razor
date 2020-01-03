@@ -1,0 +1,73 @@
+﻿@page "/ManageProducts"
+@using Digitec_Api.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService Modal
+
+<div class="container">
+    <p>Your Registered Products</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Product Link</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in _products)
+        {
+            <tr>
+                <td>@item.ProductIdSimple</td>
+                <td>
+                    <strong>@item.Brand</strong> @item.Name</td>
+                <td>@item.Link</td>
+                <td>
+                    <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="ShowModal">Add</button>
+</div>
+
+@code {
+    private List<Product> _products = new List<Product>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdateProductsTable();
+        }
+    }
+
+    private async Task UpdateProductsTable()
+    {
+        _products = await Storage.GetInstance(AuthenticationStateProvider).GetProductsForUser();
+        this.StateHasChanged();
+    }
+
+    private async Task RemoveProduct(Product product)
+    {
+        await Storage.GetInstance(AuthenticationStateProvider).RemoveUserFromProduct(product);
+        await UpdateProductsTable();
+    }
+
+    private void ShowModal()
+    {
+        Modal.OnClose += ModalClosed;
+        Modal.Show<RegisterProductComponent>("Register A New Product");
+    }
+
+    private async void ModalClosed(ModalResult modalResult)
+    {
+        if (!modalResult.Cancelled)
+        {
+            await UpdateProductsTable();
+        }
+    }
+
+}

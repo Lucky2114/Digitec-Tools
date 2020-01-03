@@ -1,82 +1,17 @@
 ﻿@page "/"
-@using Digitec_Tools.Data
 
-<div class="d-flex align-items-center min-vh-100">
-    <div class="container">
+<div class="container">
+    <div class="align-content-center text-center">
+        <h1>Welcome to Digitec-Tools!</h1>
+        @* TODO Add link to BuyMeACoffee *@
+        <p>Digitec Tools is an Open Source Project. Please consider supporting it, so the poor Dev can afford the server cost.</p>
+        <br/>
+        <br/>        
 
-        @if (showSuccess)
-        {
-            <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
-                <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
-                <span class="swal2-success-line-tip"></span>
-                <span class="swal2-success-line-long"></span>
-                <div class="swal2-success-ring"></div>
-                <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
-                <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
-            </div>
-        }
-        else if (showError)
-        {
-            <div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>
-        }
-
-        <EditForm Model="@PriceChangeModel" OnValidSubmit="@OnValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <InputText class="form-control" id="product" @bind-Value="@PriceChangeModel.ProductUrl" placeholder="Product Url" />
-            <br />
-            <InputText class="form-control" id="email" @bind-Value="@PriceChangeModel.Email" placeholder="Your E-Mail Address" />
-            <br />
-
-            <button class="btn btn-primary" style="transition: width 1s;" type="submit" disabled=@disabled>
-                @if (spin)
-                {
-                    <div class="row btn-loading">
-                        <div class="col-xs-6">
-                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                        </div>
-                        <div class="col-xs-6">
-                            <div>Loading..</div>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div>Submit</div>
-                }
-            </button>
-        </EditForm>
+        <h2>What can I do with it?</h2>
+        <p>For now you can: Take a Digitec product and get notified whenever the price changes.</p>
+        <br/>
+        @* TODO Add links *@
+        <p>But before you can do that, please Register / Login.</p>
     </div>
 </div>
-
-@code {
-    private PriceChangeModel PriceChangeModel;
-
-    private bool showError = false;
-    private bool showSuccess = false;
-
-    private bool spin = false;
-    private bool disabled = false;
-
-    private async Task OnValidSubmit()
-    {
-        //update button state
-        spin = true;
-        disabled = true;
-
-        var result = await Tools.RegisterNewProduct(PriceChangeModel.ProductUrl, PriceChangeModel.Email);
-        spin = false;
-        disabled = false;
-
-        if (result)
-            showSuccess = true;
-        else showError = true;
-    }
-
-    protected override void OnInitialized()
-    {
-        PriceChangeModel = new PriceChangeModel();
-        base.OnInitialized();
-    }
-}

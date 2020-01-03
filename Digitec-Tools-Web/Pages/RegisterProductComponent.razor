@@ -1,0 +1,102 @@
+﻿@using Digitec_Tools_Web.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <div class="container align-content-center">
+            @if (showSuccess)
+            {
+                <div class="swal2-icon swal2-success swal2-animate-success-icon" style="display: flex;">
+                    <div class="swal2-success-circular-line-left" style="background-color: rgb(255, 255, 255);"></div>
+                    <span class="swal2-success-line-tip"></span>
+                    <span class="swal2-success-line-long"></span>
+                    <div class="swal2-success-ring"></div>
+                    <div class="swal2-success-fix" style="background-color: rgb(255, 255, 255);"></div>
+                    <div class="swal2-success-circular-line-right" style="background-color: rgb(255, 255, 255);"></div>
+                </div>
+            }
+            else if (showError)
+            {
+                <div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;">
+                    <span class="swal2-x-mark">
+                        <span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span>
+                    </span>
+                </div>
+            }
+
+            <EditForm Model="@PriceChangeModel" OnValidSubmit="@OnValidSubmit" Context="formContext">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <InputText class="form-control" id="product" @bind-Value="@PriceChangeModel.ProductUrl" placeholder="Product Url"/>
+
+                @*<br/>
+                    <InputText class="form-control" id="email" @bind-Value="@PriceChangeModel.Email" placeholder="Your E-Mail Address"/>*@
+                <br/>
+
+                <button class="btn btn-primary" type="submit" disabled=@disabled>
+                    @if (spin)
+                    {
+                        <div class="row btn-loading">
+                            <div class="col-xs-6">
+                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            </div>
+                            <div class="col-xs-6">
+                                <div>Loading..</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>Submit</div>
+                    }
+                </button>
+            </EditForm>
+        </div>
+    </Authorized>
+
+    <NotAuthorized>
+        <div class="container text-center">
+            <h1>You're not logged in.</h1>
+            <a href="Identity/Account/Login">Log in</a>
+            <a href="Identity/Account/Register">Register</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code
+{
+    private PriceChangeModel PriceChangeModel;
+
+    private bool showError = false;
+    private bool showSuccess = false;
+
+    private bool spin = false;
+    private bool disabled = false;
+
+    private async Task OnValidSubmit()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+    //update button state
+        spin = true;
+        disabled = true;
+
+        var result = await Tools.RegisterNewProduct(PriceChangeModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider);
+        spin = false;
+        disabled = false;
+
+        if (result)
+            showSuccess = true;
+        else showError = true;
+    }
+
+    protected override void OnInitialized()
+    {
+        PriceChangeModel = new PriceChangeModel();
+        base.OnInitialized();
+    }
+
+}
