@@ -3,45 +3,54 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IModalService Modal
 
-<div class="container">
-    <p>Your Registered Products</p>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Product Id</th>
-            <th>Product Name</th>
-            <th>Product Link</th>
-            <th>Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in _products)
-        {
-            <tr>
-                <td>@item.ProductIdSimple</td>
-                <td>
-                    <strong>@item.Brand</strong> @item.Name</td>
-                <td>@item.Url</td>
-                <td>
-                    <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+<AuthorizeView>
+    <Authorized>
+        <div class="container">
+            <p>Your Registered Products</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Id</th>
+                        <th>Product Name</th>
+                        <th>Product Link</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _products)
+                    {
+                        <tr>
+                            <td>@item.ProductIdSimple</td>
+                            <td>
+                                <strong>@item.Brand</strong> @item.Name
+                            </td>
+                            <td>@item.Url</td>
+                            <td>
+                                <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-    <button class="btn btn-primary" @onclick="ShowModal">Add</button>
-    @if (_displayError)
-    {
-        <br/>
-        <p class="text-danger">An Error occured while trying to register the product. Sorry about that.</p>
-    }
-    else
-    {
-        <br/>
-        <p class="text-success">Product Sucessfully Registered!</p>
-    }
-</div>
+            <button class="btn btn-primary" @onclick="ShowModal">Add</button>
+            @if (_displayError)
+            {
+                <br />
+                <p class="text-danger">An Error occured while trying to register the product. Sorry about that.</p>
+            }
+            else
+            {
+                <br />
+                <p class="text-success">Product Sucessfully Registered!</p>
+            }
+        </div>
+    </Authorized>
+    
+    <NotAuthorized>
+        <NotAuthorizedComponent/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private List<Product> _products = new List<Product>();
