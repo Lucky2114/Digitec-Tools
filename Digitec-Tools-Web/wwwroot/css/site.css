@@ -8,6 +8,10 @@ a, .btn-link {
     color: #0366d6;
 }
 
+.footer {
+    background-color: whitesmoke;
+}
+
 .btn-loading {
     padding-left: 0.7rem;
     padding-right: 0.7rem;

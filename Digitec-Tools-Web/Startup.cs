@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Digitec_Tools_Web.Areas.Identity;
 using Digitec_Tools_Web.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Digitec_Tools_Web.Services;
 
 namespace Digitec_Tools_Web
 {
@@ -41,6 +43,9 @@ namespace Digitec_Tools_Web
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddBlazoredModal();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

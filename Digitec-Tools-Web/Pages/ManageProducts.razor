@@ -17,18 +17,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in _products)
+                    @if (_products != null)
                     {
-                        <tr>
-                            <td>@item.ProductIdSimple</td>
-                            <td>
-                                <strong>@item.Brand</strong> @item.Name
-                            </td>
-                            <td>@item.Url</td>
-                            <td>
-                                <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
-                            </td>
-                        </tr>
+                        @foreach (var item in _products)
+                        {
+                            <tr>
+                                <td>@item.ProductIdSimple</td>
+                                <td>
+                                    <strong>@item.Brand</strong> @item.Name
+                                </td>
+                                <td>@item.Url</td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -46,9 +49,9 @@
             }
         </div>
     </Authorized>
-    
+
     <NotAuthorized>
-        <NotAuthorizedComponent/>
+        <NotAuthorizedComponent />
     </NotAuthorized>
 </AuthorizeView>
 
