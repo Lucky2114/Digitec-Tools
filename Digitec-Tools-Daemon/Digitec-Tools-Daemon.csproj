@@ -6,4 +6,8 @@
     <RootNamespace>Digitec_Tools_Daemon</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Digitec-Tools\Digitec-Tools.csproj" />
+  </ItemGroup>
+
 </Project>

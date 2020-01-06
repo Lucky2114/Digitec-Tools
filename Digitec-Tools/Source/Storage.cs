@@ -1,12 +1,17 @@
 ﻿using Digitec_Api.Models;
 using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
-
-namespace Digitec_Tools_Web.Source
+// This Class Library provides:
+// 1. An interface to the database that stores the registered products
+// 2. Classes (Tasks) that contain a specific functionality. For Example checking for changes in the price.
+// 
+// These classes are instantiated in the Daemon Project, which then creates a new Thread for every Task.
+// The Task is supposed to run in the background, implementing a TaskInterface, that provides feedback and error logs.
+namespace Digitec_Tools.Source
 {
     public class Storage
     {
@@ -72,9 +77,6 @@ namespace Digitec_Tools_Web.Source
 
         public async Task<List<Product>> GetProductsForUser()
         {
-            //TODO Is there some way to do this cleaner? With queries?
-
-
             var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
             if (!user.Identity.IsAuthenticated)
@@ -86,7 +88,7 @@ namespace Digitec_Tools_Web.Source
             var query = _database.CollectionGroup("Users").WhereEqualTo("Email", user.Identity.Name);
             var querySnapshot = await query.GetSnapshotAsync();
             var matchedUsers = querySnapshot.Documents.ToList();
-            
+
             foreach (var matchedUser in matchedUsers)
             {
                 var product = await matchedUser.Reference.Parent.Parent.GetSnapshotAsync();
@@ -123,6 +125,27 @@ namespace Digitec_Tools_Web.Source
             }
 
             return await Task.FromResult(false);
+        }
+
+        public async Task<List<Dictionary<string, object>>> GetAllProducts()
+        {
+            try
+            {
+                var snapshot = await _database.Collection("Products").GetSnapshotAsync();
+                var productDocuments = snapshot.ToList();
+
+                List<Dictionary<string, object>> products = new List<Dictionary<string, object>>();
+                foreach (var item in productDocuments)
+                {
+                    products.Add(item.ToDictionary());
+                }
+                return await Task.FromResult(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 }
