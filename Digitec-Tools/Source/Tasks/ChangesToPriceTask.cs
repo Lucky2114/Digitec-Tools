@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
-using Digitec_Tools.Source;
 
 namespace Digitec_Tools.Source.Tasks
 {
@@ -50,15 +46,18 @@ namespace Digitec_Tools.Source.Tasks
 
                         if (priceOld != priceCurrent)
                         {
-                            Console.WriteLine($"{currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} !");
-                            Console.WriteLine("Notifiying Users...");
+                            string message = $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} ! \n" +
+                                $"\n" +
+                                $"Here's the link: {currentProduct["Url"]}";
 
+                            Console.WriteLine(message);
+                            Console.WriteLine("Notifiying Users...");
+                            await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(), message);
                         }
                         else
                         {
                             Console.WriteLine("Nothing Happened..");
                         }
-
                     }
                 }
                 lastResult = result;

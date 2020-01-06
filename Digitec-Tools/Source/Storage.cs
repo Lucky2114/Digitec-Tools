@@ -127,6 +127,19 @@ namespace Digitec_Tools.Source
             return await Task.FromResult(false);
         }
 
+        public async Task<List<Dictionary<string, object>>> GetUsersForProduct(string productSimpleId)
+        {
+            var userDocuments = await _database.Collection("Products").Document(productSimpleId).Collection("Users").ListDocumentsAsync().ToArray();
+
+            List<Dictionary<string, object>> users = new List<Dictionary<string, object>>();
+            foreach (var user in userDocuments)
+            {
+                var snapshot = await user.GetSnapshotAsync();
+                users.Add(snapshot.ToDictionary());
+            }
+            return users;
+        }
+
         public async Task<List<Dictionary<string, object>>> GetAllProducts()
         {
             try
