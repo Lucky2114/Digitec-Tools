@@ -18,3 +18,6 @@ On Windows use the installer: https://dev.mysql.com/downloads/windows/installer/
 On Linux: https://raspberry-projects.com/pi/software_utilities/web-servers/mysql
 
 If mysqld for starting the server doesn't work, create a new folder named "data" in the root mysql directory.
+
+# Please Consider Supporting
+<a href="https://www.buymeacoffee.com/KevinMueller" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
