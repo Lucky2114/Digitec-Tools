@@ -21,38 +21,42 @@ namespace Digitec_Tools.Source.Tasks
         {
             thread = new Thread(Worker)
             {
-                Name = this.GetType().Name
+                Name = GetType().Name
             };
             thread.Start();
         }
 
         private async void Worker()
         {
+            var storage = Storage.GetInstance(null);
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
             {
-                // No Digitec-Tools User needed
-                var result = await Storage.GetInstance(null).GetAllProducts();
+                var result = await storage.GetAllProducts();
 
                 if (lastResult != null)
                 {
                     foreach (var currentProduct in result)
                     {
                         //find this in the old product list by searching for the first matching ProductIdSimple. (It's unique so that's fine)
-                        var oldProduct = lastResult.Find(x => x.First(x => x.Key.Equals("ProductIdSimple")).Value.Equals(currentProduct["ProductIdSimple"].ToString()));
+                        var oldProduct = lastResult.Find(x =>
+                            x.First(y => y.Key.Equals("ProductIdSimple")).Value
+                                .Equals(currentProduct["ProductIdSimple"].ToString()));
 
                         double priceCurrent = currentProduct["PriceCurrent"].ToString().ParseToDouble();
                         double priceOld = oldProduct["PriceCurrent"].ToString().ParseToDouble();
 
                         if (priceOld != priceCurrent)
                         {
-                            string message = $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} ! \n" +
-                                $"\n" +
+                            string message =
+                                $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} ! \n" +
+                                "\n" +
                                 $"Here's the link: {currentProduct["Url"]}";
 
                             Console.WriteLine(message);
                             Console.WriteLine("Notifiying Users...");
-                            await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(), message);
+                            await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
+                                message);
                         }
                         else
                         {
@@ -60,10 +64,17 @@ namespace Digitec_Tools.Source.Tasks
                         }
                     }
                 }
+                
                 lastResult = result;
+
+                //Now update the database
+                Console.WriteLine("Updating the product by fetching Digitec");
+                await storage.UpdateAllProducts(result);
+
 
                 Thread.Sleep(intervall);
             }
+
             thread = null;
         }
 

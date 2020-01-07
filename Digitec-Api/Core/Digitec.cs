@@ -33,7 +33,7 @@ namespace Digitec_Api
                     //ignored (there is no progress bar. continue)
                 }
                 var productPriceNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("div").ToList()[DigitecWebConstatnts.ProductPriceDivIndex];
-
+                
                 string priceCurrent = productPriceNode.Descendants("strong").TryFirst().InnerText;
                 string priceOld = productPriceNode.Descendants("span").Where(x => x.HasClass(DigitecWebConstatnts.ProductPriceOldClassName)).TryFirst().InnerText;
 

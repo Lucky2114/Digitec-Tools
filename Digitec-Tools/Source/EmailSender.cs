@@ -25,7 +25,7 @@ namespace Digitec_Tools.Source
             string user = gmailSecretsContents.Split(new string[] { "user=", "password=" }, StringSplitOptions.RemoveEmptyEntries)[0];
             string password = gmailSecretsContents.Split(new string[] { "user=", "password=" }, StringSplitOptions.RemoveEmptyEntries)[1];
 
-            var fromAddress = new MailAddress(user, "From Name");
+            var fromAddress = new MailAddress(user, "Digitec Tools Notification");
             var toAddress = new MailAddress(email, "To Name");
 
             var smtp = new SmtpClient
