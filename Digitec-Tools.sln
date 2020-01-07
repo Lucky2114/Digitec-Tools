@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Api-Testing", "Digi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools-Web", "Digitec-Tools-Web\Digitec-Tools-Web.csproj", "{2F7BBC0F-A3E4-4150-AE05-28E6553D6FFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitec-Tools-Daemon", "Digitec-Tools-Daemon\Digitec-Tools-Daemon.csproj", "{A28057B9-DA3B-4C3C-AD6C-41E85A152B37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools-Daemon", "Digitec-Tools-Daemon\Digitec-Tools-Daemon.csproj", "{A28057B9-DA3B-4C3C-AD6C-41E85A152B37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digitec-Tools", "Digitec-Tools\Digitec-Tools.csproj", "{84096A2E-A329-4506-A77C-23B007D9E2E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools", "Digitec-Tools\Digitec-Tools.csproj", "{84096A2E-A329-4506-A77C-23B007D9E2E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

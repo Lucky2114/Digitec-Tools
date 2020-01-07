@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Digitec-Tools\Digitec-Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Shared\" />
+  </ItemGroup>
+
 </Project>
