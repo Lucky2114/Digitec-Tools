@@ -10,9 +10,7 @@ namespace Digitec_Tools_Daemon
     {
         static void Main(string[] args)
         {
-            //This Daemon has two tasks:
-            //1. Update the database with all registered products at any given intervall
-            //2. Notify the registered Users whenever there is a change to the registered products.
+            //This Daemon just runns the tasks from the class library
 
             List<ITask> tasks = new List<ITask>()
             {
@@ -21,6 +19,7 @@ namespace Digitec_Tools_Daemon
 
             foreach (ITask task in tasks)
             {
+                Console.WriteLine("Starting Task..");
                 task.StartTask();
             }
 
