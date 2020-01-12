@@ -10,9 +10,9 @@ namespace Digitec_Tools.Source.Tasks
         private bool shouldAbort;
         private Thread thread;
 
-        private readonly int intervall;
+        private readonly double intervall;
 
-        public ChangesToPriceTask(int intervallInMinutes)
+        public ChangesToPriceTask(double intervallInMinutes)
         {
             intervall = intervallInMinutes;
         }
@@ -32,6 +32,13 @@ namespace Digitec_Tools.Source.Tasks
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
             {
+                var timer = new TimerPlus()
+                {
+                    AutoReset = false,
+                    Interval = TimeSpan.FromMinutes(intervall).TotalMilliseconds
+                };
+                timer.Start();
+
                 var result = await storage.GetAllProducts();
 
                 if (lastResult != null)
@@ -64,15 +71,24 @@ namespace Digitec_Tools.Source.Tasks
                         }
                     }
                 }
-                
+
                 lastResult = result;
 
                 //Now update the database
+                Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
                 Console.WriteLine("Updating the product by fetching Digitec");
                 await storage.UpdateAllProducts(result);
+                Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
 
-
-                Thread.Sleep(intervall);
+                if (timer.TimeLeft > 0)
+                {
+                    //sleep the remaining time of the intervall
+                    Console.WriteLine($"Sleeping for {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds.");
+                    Thread.Sleep(Convert.ToInt32(timer.TimeLeft));
+                } else
+                {
+                    Console.WriteLine($"Updating the database took to long! Now {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds behind!");
+                }
             }
 
             thread = null;

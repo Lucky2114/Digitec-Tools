@@ -14,7 +14,7 @@ namespace Digitec_Tools_Daemon
 
             List<ITask> tasks = new List<ITask>()
             {
-                new ChangesToPriceTask(7000)
+                new ChangesToPriceTask(10)
             };
 
             foreach (ITask task in tasks)

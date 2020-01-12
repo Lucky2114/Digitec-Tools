@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Digitec_Api;
-using Google.Cloud.Firestore.V1;
 
 // This Class Library provides:
 // 1. An interface to the database that stores the registered products
@@ -36,7 +35,7 @@ namespace Digitec_Tools.Source
 
         private async Task<DocumentReference> SetProduct(Product product)
         {
-            if (product.ProductIdSimple.Equals(""))
+            if (string.IsNullOrEmpty(product.ProductIdSimple))
                 throw new Exception("Product contains no Id");
 
             var collection = _database.Collection("Products");

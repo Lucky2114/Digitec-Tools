@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Digitec_Tools_Web-72893579-09EF-4B45-B6F4-D8746FB4F14A</UserSecretsId>
     <RootNamespace>Digitec_Tools_Web</RootNamespace>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,12 @@
 
   <ItemGroup>
     <Folder Include="Pages\Shared\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
