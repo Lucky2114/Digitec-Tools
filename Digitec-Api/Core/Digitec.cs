@@ -30,7 +30,7 @@ namespace Digitec_Api
                 }
                 catch
                 {
-                    //ignored (there is no progress bar. continue)
+                    //ignored (there is no progress bar continue)
                 }
                 var productPriceNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstatnts.ProductDetailClassName)).Descendants("div").ToList()[DigitecWebConstatnts.ProductPriceDivIndex];
                 
