@@ -24,5 +24,6 @@ namespace Digitec_Tools_Web
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }

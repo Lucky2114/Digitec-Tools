@@ -18,6 +18,7 @@ using Digitec_Tools_Web.Areas.Identity;
 using Digitec_Tools_Web.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Digitec_Tools_Web.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Digitec_Tools_Web
 {
@@ -35,8 +36,8 @@ namespace Digitec_Tools_Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
+                options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
@@ -68,6 +69,11 @@ namespace Digitec_Tools_Web
 
             app.UseRouting();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -77,6 +83,7 @@ namespace Digitec_Tools_Web
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
         }
     }
 }
