@@ -19,6 +19,7 @@ using Digitec_Tools_Web.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Digitec_Tools_Web.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Digitec_Tools_Web.Areas.Identity.Pages.Account;
 
 namespace Digitec_Tools_Web
 {
@@ -47,6 +48,7 @@ namespace Digitec_Tools_Web
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            //services.AddSingleton<SignInManager<IdentityUser>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +82,7 @@ namespace Digitec_Tools_Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
