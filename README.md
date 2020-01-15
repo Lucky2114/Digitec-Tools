@@ -11,10 +11,15 @@ Click on Generate New Private Key
 Save the file somewhere LOCALLY. Don't publish it!
 
 These are all the Environment Variables you need to set:
+
 SHOPPINGTOOLSCONNECTIONSTRING={Connectionstring To the Identity Database}
+
 DIGITEC_TOOLS_GMAIL_CREDENTIALS={Path To The GMAIL Credentials File} (consists of user={email} \n and password={password}
+
 SendGridUser={User Name for SendGrid}
+
 SendGridKey={Key From SendGrid}
+
 GOOGLE_APPLICATION_CREDENTIALS={Path To The Private Key You Just Generated}
 
 
