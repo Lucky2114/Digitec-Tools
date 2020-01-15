@@ -14,6 +14,7 @@ namespace Digitec_Tools_Daemon
 
             List<ITask> tasks = new List<ITask>()
             {
+                //Update every 10 minutes.
                 new ChangesToPriceTask(10)
             };
 
