@@ -19,15 +19,18 @@ namespace Digitec_Tools.Source.Tasks
 
         public void StartTask()
         {
+            Console.WriteLine("Creating new thread");
             thread = new Thread(Worker)
             {
                 Name = GetType().Name
             };
+            Console.WriteLine("Starting new thread");
             thread.Start();
         }
 
         private async void Worker()
         {
+            Console.WriteLine("Thread started");
             var storage = Storage.GetInstance(null);
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
