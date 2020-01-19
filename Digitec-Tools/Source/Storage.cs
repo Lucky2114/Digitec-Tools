@@ -24,6 +24,7 @@ namespace Digitec_Tools.Source
 
         public static Storage GetInstance(AuthenticationStateProvider authenticationStateProvider)
         {
+            Console.WriteLine("Google Application Credentials: " + Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
             return _instance ??= new Storage(authenticationStateProvider);
         }
 
@@ -54,7 +55,7 @@ namespace Digitec_Tools.Source
             await document.SetAsync(data);
             return await Task.FromResult(document);
         }
-        
+
         public async Task<bool> AddNewProduct(Product product, UserData userData)
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -152,25 +153,18 @@ namespace Digitec_Tools.Source
 
         public async Task<List<Dictionary<string, object>>> GetAllProducts()
         {
-            try
-            {
-                var snapshot = await _database.Collection("Products").GetSnapshotAsync();
-                var productDocuments = snapshot.ToList();
+            Console.WriteLine("Getting Snapshot...");
+            var snapshot = await _database.Collection("Products").GetSnapshotAsync();
+            Console.WriteLine("Received Snapshot.");
+            var productDocuments = snapshot.ToList();
 
-                var products = new List<Dictionary<string, object>>();
-                foreach (var item in productDocuments)
-                {
-                    products.Add(item.ToDictionary());
-                }
-
-                return await Task.FromResult(products);
-            }
-            catch (Exception ex)
+            var products = new List<Dictionary<string, object>>();
+            foreach (var item in productDocuments)
             {
-                Console.WriteLine(ex.Message);
+                products.Add(item.ToDictionary());
             }
 
-            return null;
+            return await Task.FromResult(products);
         }
 
         public async Task UpdateAllProducts(List<Dictionary<string, object>> products)

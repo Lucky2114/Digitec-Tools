@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 
 namespace Digitec_Tools.Source.Tasks
@@ -31,6 +33,16 @@ namespace Digitec_Tools.Source.Tasks
         private async void Worker()
         {
             Console.WriteLine("Thread started");
+
+            //Systemd - Bug hunting
+            Console.WriteLine("starting download..");
+            var c = new HttpClient();
+            var _download = await c.GetStringAsync("https://www.google.ch");
+            Console.WriteLine($"Downloaded {_download.Length} characters.");
+            //---------------------
+
+
+
             var storage = Storage.GetInstance(null);
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
@@ -43,6 +55,7 @@ namespace Digitec_Tools.Source.Tasks
                 timer.Start();
 
                 var result = await storage.GetAllProducts();
+                Console.WriteLine($"Received {result.Count} products.");
 
                 if (lastResult != null)
                 {

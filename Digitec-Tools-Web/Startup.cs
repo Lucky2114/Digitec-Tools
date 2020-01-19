@@ -37,7 +37,6 @@ namespace Digitec_Tools_Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                //options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
                 options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

@@ -6,8 +6,8 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <InputText class="form-control" id="product" @bind-Value="@model.Input.Email" placeholder="E-Mail Address" />
-        <InputText class="form-control" id="product" @bind-Value="@model.Input.Password" placeholder="Password" />
+        <InputText class="form-control" id="product" @bind-Value="@model.Email" placeholder="E-Mail Address" />
+        <InputText class="form-control" id="product" @bind-Value="@model.Password" placeholder="Password" />
 
         @*<br/>
             <InputText class="form-control" id="email" @bind-Value="@RegisterProductModel.Email" placeholder="Your E-Mail Address"/>*@
@@ -18,7 +18,7 @@
 </div>
 
 @code {
-    //private Digitec_Tools_Web.Data.Models.LoginModel model = new Data.Models.LoginModel();
+    private Digitec_Tools_Web.Data.Models.LoginModel model = new Data.Models.LoginModel();
 
     private async Task OnValidSubmit()
     {
