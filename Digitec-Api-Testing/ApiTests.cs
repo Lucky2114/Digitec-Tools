@@ -11,6 +11,7 @@ namespace Digitec_Api_Testing
         [SetUp]
         public void Setup()
         {
+            ProductInfoTest();
         }
 
         [Test]

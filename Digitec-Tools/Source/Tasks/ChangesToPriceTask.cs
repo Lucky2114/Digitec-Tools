@@ -33,16 +33,6 @@ namespace Digitec_Tools.Source.Tasks
         private async void Worker()
         {
             Console.WriteLine("Thread started");
-
-            //Systemd - Bug hunting
-            Console.WriteLine("starting download..");
-            var c = new HttpClient();
-            var _download = await c.GetStringAsync("https://www.google.ch");
-            Console.WriteLine($"Downloaded {_download.Length} characters.");
-            //---------------------
-
-
-
             var storage = Storage.GetInstance(null);
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
