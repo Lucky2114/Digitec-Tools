@@ -4,13 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Digitec_Tools.Source.Tasks
 {
     public class ChangesToPriceTask : ITask
     {
         private bool shouldAbort;
-        private Thread thread;
+        public Task Task { get; set; }
 
         private readonly double intervall;
 
@@ -21,18 +22,16 @@ namespace Digitec_Tools.Source.Tasks
 
         public void StartTask()
         {
-            Console.WriteLine("Creating new thread");
-            thread = new Thread(Worker)
-            {
-                Name = GetType().Name
-            };
-            Console.WriteLine("Starting new thread");
-            thread.Start();
+            Console.WriteLine("Creating new task");
+
+            Task = new Task(Worker);
+            Console.WriteLine("Starting new task");
+            Task.Start();
         }
 
         private async void Worker()
         {
-            Console.WriteLine("Thread started");
+            Console.WriteLine("Task started");
             var storage = Storage.GetInstance(null);
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
@@ -91,13 +90,14 @@ namespace Digitec_Tools.Source.Tasks
                     //sleep the remaining time of the intervall
                     Console.WriteLine($"Sleeping for {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds.");
                     Thread.Sleep(Convert.ToInt32(timer.TimeLeft));
-                } else
+                }
+                else
                 {
                     Console.WriteLine($"Updating the database took to long! Now {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds behind!");
                 }
             }
 
-            thread = null;
+            Task = null;
         }
 
         public void Abort()

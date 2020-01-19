@@ -10,15 +10,15 @@ namespace Digitec_Tools_Daemon
 {
     public class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             //This Daemon just runns the tasks from the class library
 
             List<ITask> tasks = new List<ITask>()
-                {
+            {
                     //Update every 10 minutes.
                     new ChangesToPriceTask(10)
-                };
+            };
 
             foreach (ITask task in tasks)
             {
