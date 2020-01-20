@@ -1,0 +1,27 @@
+﻿@page "/Identity/Account/LoginCustom"
+<h3>Login</h3>
+
+<div class="container align-content-center">
+    <EditForm Model="@model" OnValidSubmit="@OnValidSubmit" Context="formContext">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputText class="form-control" id="product" @bind-Value="@model.Email" placeholder="E-Mail Address" />
+        <InputText class="form-control" id="product" @bind-Value="@model.Password" placeholder="Password" />
+
+        @*<br/>
+            <InputText class="form-control" id="email" @bind-Value="@RegisterProductModel.Email" placeholder="Your E-Mail Address"/>*@
+        <br />
+
+        <button class="btn btn-primary" type="submit">Login</button>
+    </EditForm>
+</div>
+
+@code {
+    private Shopping_Tools_Web.Data.Models.LoginModel model = new Data.Models.LoginModel();
+
+    private async Task OnValidSubmit()
+    {
+        
+    }
+}

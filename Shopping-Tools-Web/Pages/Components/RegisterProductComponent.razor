@@ -1,0 +1,75 @@
+﻿@using Shopping_Tools_Web.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IModalService ModalService
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <div class="container align-content-center">
+            <EditForm Model="@_registerProductModel" OnValidSubmit="@OnValidSubmit" Context="formContext">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <InputText class="form-control" id="product" @bind-Value="@_registerProductModel.ProductUrl" placeholder="Product Url"/>
+
+                @*<br/>
+                    <InputText class="form-control" id="email" @bind-Value="@RegisterProductModel.Email" placeholder="Your E-Mail Address"/>*@
+                <br/>
+
+                <button class="btn btn-primary" type="submit" disabled=@_disabled>
+                    @if (_spin)
+                    {
+                        <div class="row btn-loading">
+                            <div class="col-xs-6">
+                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            </div>
+                            <div class="col-xs-6">
+                                <div>Loading..</div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>Submit</div>
+                    }
+                </button>
+            </EditForm>
+        </div>
+    </Authorized>
+
+    <NotAuthorized>
+        <NotAuthorizedComponent />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code
+{
+    private RegisterProductModel _registerProductModel;
+
+    private bool _spin = false;
+    private bool _disabled = false;
+
+    private async Task OnValidSubmit()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+    //update button state
+        _spin = true;
+        _disabled = true;
+
+        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider);
+        _spin = false;
+        _disabled = false;
+
+        //Cancel or close based on result
+        ModalService.Close(result ? ModalResult.Ok(_registerProductModel.ProductUrl) : ModalResult.Cancel());
+    }
+
+    protected override void OnInitialized()
+    {
+        _registerProductModel = new RegisterProductModel();
+        base.OnInitialized();
+    }
+
+}

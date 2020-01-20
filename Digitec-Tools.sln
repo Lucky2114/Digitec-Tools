@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Api", "Digitec-Api\Digitec-Api.csproj", "{4AB56FC0-A659-447F-B125-83D1541A7C81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping-Tools-Api-Services", "Shopping-Tools-Api-Services\Shopping-Tools-Api-Services.csproj", "{4AB56FC0-A659-447F-B125-83D1541A7C81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Api-Testing", "Digitec-Api-Testing\Digitec-Api-Testing.csproj", "{44C5D581-9C67-445B-8ECF-12CB693A739E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shoopping-Tools-Api-Testing", "Shoopping-Tools-Api-Testing\Shoopping-Tools-Api-Testing.csproj", "{44C5D581-9C67-445B-8ECF-12CB693A739E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools-Web", "Digitec-Tools-Web\Digitec-Tools-Web.csproj", "{2F7BBC0F-A3E4-4150-AE05-28E6553D6FFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping-Tools-Web", "Shopping-Tools-Web\Shopping-Tools-Web.csproj", "{2F7BBC0F-A3E4-4150-AE05-28E6553D6FFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools-Daemon", "Digitec-Tools-Daemon\Digitec-Tools-Daemon.csproj", "{A28057B9-DA3B-4C3C-AD6C-41E85A152B37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping-Tools-Daemon", "Shopping-Tools-Daemon\Shopping-Tools-Daemon.csproj", "{A28057B9-DA3B-4C3C-AD6C-41E85A152B37}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Digitec-Tools", "Digitec-Tools\Digitec-Tools.csproj", "{84096A2E-A329-4506-A77C-23B007D9E2E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping-Tools", "Shopping-Tools\Shopping-Tools.csproj", "{84096A2E-A329-4506-A77C-23B007D9E2E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
