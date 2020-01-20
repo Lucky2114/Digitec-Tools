@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services;
+using Shopping_Tools.Data.Enums;
 
 // This Class Library provides:
 // 1. An interface to the database that stores the registered products
@@ -19,19 +20,22 @@ namespace Shopping_Tools.Source
     {
         private readonly FirestoreDb _database;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly Shops? _currentShop;
 
         private static Storage _instance;
 
-        public static Storage GetInstance(AuthenticationStateProvider authenticationStateProvider)
+        public static Storage GetInstance(AuthenticationStateProvider authenticationStateProvider, Shops? currentShop)
         {
-            Console.WriteLine("Google Application Credentials: " + Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
-            return _instance ??= new Storage(authenticationStateProvider);
+            Console.WriteLine("Google Application Credentials: " +
+                              Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
+            return _instance ??= new Storage(authenticationStateProvider, currentShop);
         }
 
-        private Storage(AuthenticationStateProvider authenticationStateProvider)
+        private Storage(AuthenticationStateProvider authenticationStateProvider, Shops? currentShop)
         {
             _authenticationStateProvider = authenticationStateProvider;
             _database = FirestoreDb.Create("digitec-tools");
+            _currentShop = currentShop;
         }
 
         private async Task<DocumentReference> SetProduct(Product product)
@@ -42,14 +46,15 @@ namespace Shopping_Tools.Source
             var collection = _database.Collection("Products");
             var document = collection.Document(product.ProductIdSimple);
 
-            Dictionary<string, object> data = new Dictionary<string, object>
+            var data = new Dictionary<string, object>
             {
                 {"Name", product.Name},
                 {"Brand", product.Brand},
                 {"PriceCurrent", product.PriceCurrent},
                 {"PriceOld", product.PriceOld},
                 {"ProductIdSimple", product.ProductIdSimple},
-                {"Url", product.Url}
+                {"Url", product.Url},
+                {"OnlineShopName", product.OnlineShopName}
             };
 
             await document.SetAsync(data);
@@ -69,7 +74,7 @@ namespace Shopping_Tools.Source
                 var userCollection = document.Collection("Users");
                 var userDocument = userCollection.Document(userData.Email);
 
-                Dictionary<string, object> userDocData = new Dictionary<string, object>
+                var userDocData = new Dictionary<string, object>
                 {
                     {"Email", userData.Email},
                     {"IPv4", userData.IPv4}
@@ -101,6 +106,13 @@ namespace Shopping_Tools.Source
             foreach (var matchedUser in matchedUsers)
             {
                 var product = await matchedUser.Reference.Parent.Parent.GetSnapshotAsync();
+                product.TryGetValue("OnlineShopName", out string shopName);
+                if (!shopName.Equals(_currentShop?.GetName()))
+                {
+                    continue;
+                }
+
+
                 product.TryGetValue("ProductIdSimple", out string id);
                 product.TryGetValue("Brand", out string brand);
                 product.TryGetValue("Name", out string name);
@@ -167,16 +179,17 @@ namespace Shopping_Tools.Source
             return await Task.FromResult(products);
         }
 
-        public async Task UpdateAllProducts(List<Dictionary<string, object>> products)
+        public async Task UpdateAllProducts(IEnumerable<Dictionary<string, object>> products)
         {
             foreach (var product in products)
             {
-                var api_res = await Digitec.GetProductInfo(product["Url"].ToString());
-                if (!api_res.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
+                var apiRes = await Digitec.GetProductInfo(product["Url"].ToString());
+                if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
                 {
                     throw new Exception("Product Id's don't match! This is an API error.");
                 }
-                await SetProduct(api_res);
+
+                await SetProduct(apiRes);
             }
         }
     }

@@ -13,5 +13,6 @@ namespace Shopping_Tools_Api_Services.Models
         public string ProductId { get; set; }
         public string ProductIdSimple { get; set; }
         public string Url { get; set; }
+        public string OnlineShopName { get; set; }
     }
 }

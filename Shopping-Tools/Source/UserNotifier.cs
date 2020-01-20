@@ -10,10 +10,10 @@ namespace Shopping_Tools.Source
         public static async Task NotifyUsersForProduct(string productSimpleId, string message)
         {
             //Get all users for the product => and send mail for everyone.
-            var usersToSendTo = await Storage.GetInstance(null).GetUsersForProduct(productSimpleId);
+            var usersToSendTo = await Storage.GetInstance(null, null).GetUsersForProduct(productSimpleId);
             foreach (var user in usersToSendTo)
             {
-                string email = user["Email"].ToString();
+                var email = user["Email"].ToString();
                 if (email.Contains("@"))
                 {
                     await EmailSender.Send(email, message, "The Price Of A Product Has Changed!");

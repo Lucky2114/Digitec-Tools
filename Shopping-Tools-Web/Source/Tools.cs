@@ -13,7 +13,7 @@ namespace Shopping_Tools_Web.Source
             var product = await Digitec.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 
-            var storage = Storage.GetInstance(authenticationStateProvider);
+            var storage = Storage.GetInstance(authenticationStateProvider, DynamicApiHelper.ShopNameToEnum(product.OnlineShopName));
             return await storage.AddNewProduct(product, userData);
         }
     }

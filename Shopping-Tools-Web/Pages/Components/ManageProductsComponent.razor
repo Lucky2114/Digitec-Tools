@@ -1,0 +1,98 @@
+﻿@inject IModalService Modal
+@using Shopping_Tools.Data.Enums
+@using Shopping_Tools_Api_Services.Models
+@using Shopping_Tools.Data.Enums
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<div class="container">
+    <p>Your Registered Products</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Product Link</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (_products != null)
+        {
+            @foreach (var item in _products)
+            {
+                <tr>
+                    <td>@item.ProductIdSimple</td>
+                    <td>
+                        <strong>@item.Brand</strong> @item.Name
+                    </td>
+                    <td>@item.Url</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="@(e => RemoveProduct(item))">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="ShowModal">Add</button>
+    @if (_displayError)
+    {
+        <br />
+        <p class="text-danger">An Error occured while trying to register the product. Sorry about that.</p>
+    }
+    else
+    {
+        <br />
+        <p class="text-success">Product Sucessfully Registered!</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Shops Shop { get; set; }
+
+    private List<Product> _products = new List<Product>();
+    private bool _displayError = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdateProductsTable();
+        }
+    }
+
+    private async Task UpdateProductsTable()
+    {
+        _products = await Storage.GetInstance(AuthenticationStateProvider, Shop).GetProductsForUser();
+        this.StateHasChanged();
+    }
+
+    private async Task RemoveProduct(Product product)
+    {
+        await Storage.GetInstance(AuthenticationStateProvider, Shop).RemoveUserFromProduct(product);
+        await UpdateProductsTable();
+    }
+
+    private void ShowModal()
+    {
+        Modal.OnClose += ModalClosed;
+        Modal.Show<RegisterProductComponent>("Register A New Product");
+    }
+
+    private async void ModalClosed(ModalResult modalResult)
+    {
+        if (!modalResult.Cancelled)
+        {
+            await UpdateProductsTable();
+            _displayError = false;
+            StateHasChanged();
+            return;
+        }
+        _displayError = true;
+        StateHasChanged();
+    }
+
+}
