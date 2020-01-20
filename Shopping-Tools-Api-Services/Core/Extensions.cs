@@ -17,8 +17,8 @@ namespace Shopping_Tools_Api_Services.Core
             }
             catch
             {
-                var _virtualDocument = new HtmlDocument();
-                return _virtualDocument.CreateElement("dmy");
+                var virtualDocument = new HtmlDocument();
+                return virtualDocument.CreateElement("dmy");
             }
         }
     }

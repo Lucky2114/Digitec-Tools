@@ -7,12 +7,12 @@ namespace Shopping_Tools_Web.Source
 {
     public class Logger
     {
-        private static Logger instance;
+        private static Logger _instance;
         public string LatestLog { get; set; }
 
         public static Logger GetInstance()
         {
-            return instance ?? (instance = new Logger());
+            return _instance ??= new Logger();
         }
 
         public void Log(string message)
