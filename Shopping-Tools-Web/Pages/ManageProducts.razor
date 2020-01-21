@@ -1,13 +1,23 @@
 ﻿@page "/ManageProducts"
 @using Shopping_Tools.Data.Enums
+@using Shopping_Tools_Api_Services.Core.Digitec
 
 <AuthorizeView>
     <Authorized>
         @*TODO Add UI for switching between shops (master-detail)*@
-        <ManageProductsComponent Shop="@Shops.Digitec"/>
+        <ImplementedShopsComponent ImplementedShops="@_implementedShops" />
+
+        @*<ManageProductsComponent Shop="@Shops.Digitec"/>*@
     </Authorized>
 
     <NotAuthorized>
         <NotAuthorizedComponent/>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    private readonly List<IApi> _implementedShops = new List<IApi>()
+    {
+        new Digitec()
+    };
+}

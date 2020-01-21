@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Digitec_Api</RootNamespace>
+    <RootNamespace>Shopping_Tools_Api_Services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

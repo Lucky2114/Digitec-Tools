@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services;
 using Shopping_Tools.Data.Enums;
+using Shopping_Tools_Api_Services.Core.Digitec;
 
 // This Class Library provides:
 // 1. An interface to the database that stores the registered products
@@ -173,7 +174,7 @@ namespace Shopping_Tools.Source
         {
             foreach (var product in products)
             {
-                var apiRes = await Digitec.GetProductInfo(product["Url"].ToString());
+                var apiRes = await new Digitec().GetProductInfo(product["Url"].ToString());
                 if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
                 {
                     throw new Exception("Product Id's don't match! This is an API error.");

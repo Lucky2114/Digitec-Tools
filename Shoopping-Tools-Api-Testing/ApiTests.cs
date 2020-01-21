@@ -1,6 +1,7 @@
 using Shopping_Tools_Api_Services;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using Shopping_Tools_Api_Services.Core.Digitec;
 
 namespace Digitec_Api_Testing
 {
@@ -17,7 +18,7 @@ namespace Digitec_Api_Testing
         [Test]
         public async Task ProductInfoTest()
         {
-            var res = await Digitec.GetProductInfo(productUrl);
+            var res = await new Digitec().GetProductInfo(productUrl);
             Assert.IsNotNull(res);
         }
     }

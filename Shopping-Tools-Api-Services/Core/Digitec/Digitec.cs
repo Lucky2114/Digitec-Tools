@@ -1,14 +1,19 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services.Config;
-using Shopping_Tools_Api_Services.Core;
 using Shopping_Tools_Api_Services.Models;
 
-namespace Shopping_Tools_Api_Services
+namespace Shopping_Tools_Api_Services.Core.Digitec
 {
-    public static class Digitec
+    public class Digitec : IApi
     {
-        public static async Task<Product> GetProductInfo(string productUrl)
+        public string OnlineShopName { get; }
+
+        public Digitec()
+        {
+            OnlineShopName = "Digitec";
+        }
+        public async Task<Product> GetProductInfo(string productUrl)
         {
             if (!Validation.IsValidDigitecUrl(productUrl)) return null;
             //Problem: CSS classes are randomized => use index
@@ -61,5 +66,6 @@ namespace Shopping_Tools_Api_Services
             };
             return await Task.FromResult(productInfo);
         }
+
     }
 }
