@@ -31,7 +31,7 @@ namespace Shopping_Tools_Web.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("noreply@pleasedont.com", _sendGirdUser),
+                From = new EmailAddress("noreply@pleasedont.com", "Shopping Tools"),
                 Subject = "Shopping Tools Account Verification",
                 PlainTextContent = message,
                 HtmlContent = message

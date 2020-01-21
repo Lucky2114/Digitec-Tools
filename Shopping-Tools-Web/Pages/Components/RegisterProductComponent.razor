@@ -1,6 +1,7 @@
 ﻿@using Shopping_Tools_Web.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IModalService ModalService
+@inject Storage StorageInjected
 
 <AuthorizeView Context="authContext">
     <Authorized>
@@ -58,7 +59,7 @@
         _spin = true;
         _disabled = true;
 
-        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider);
+        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected);
         _spin = false;
         _disabled = false;
 

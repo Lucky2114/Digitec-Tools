@@ -57,6 +57,7 @@ namespace Shopping_Tools_Api_Services
                 ProductId = productUrl,
                 ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
                 Url = productUrl,
+                OnlineShopName = "Digitec"
             };
             return await Task.FromResult(productInfo);
         }

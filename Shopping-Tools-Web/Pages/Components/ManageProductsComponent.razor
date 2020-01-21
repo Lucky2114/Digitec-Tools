@@ -3,6 +3,7 @@
 @using Shopping_Tools_Api_Services.Models
 @using Shopping_Tools.Data.Enums
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Storage StorageInjected
 
 
 <div class="container">
@@ -47,6 +48,8 @@
         <br />
         <p class="text-success">Product Sucessfully Registered!</p>
     }
+    <p>Current user: @AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name</p>
+
 </div>
 
 @code {
@@ -66,13 +69,14 @@
 
     private async Task UpdateProductsTable()
     {
-        _products = await Storage.GetInstance(AuthenticationStateProvider, Shop).GetProductsForUser();
+        _products = await StorageInjected.GetProductsForUser(AuthenticationStateProvider, Shop);
+        //_products = await Storage.GetInstance(AuthenticationStateProvider, Shop).GetProductsForUser();
         this.StateHasChanged();
     }
 
     private async Task RemoveProduct(Product product)
     {
-        await Storage.GetInstance(AuthenticationStateProvider, Shop).RemoveUserFromProduct(product);
+        //await Storage.GetInstance(AuthenticationStateProvider, Shop).RemoveUserFromProduct(product);
         await UpdateProductsTable();
     }
 

@@ -32,7 +32,7 @@ namespace Shopping_Tools.Source.Tasks
         private async void Worker()
         {
             Console.WriteLine("Task started");
-            var storage = Storage.GetInstance(null, null);
+            var storage = new Storage();
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
             {

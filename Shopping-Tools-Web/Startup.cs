@@ -16,10 +16,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Shopping_Tools.Source;
 using Shopping_Tools_Web.Areas.Identity.Pages.Account;
 using Shopping_Tools_Web.Areas.Identity;
 using Shopping_Tools_Web.Data;
 using Shopping_Tools_Web.Services;
+using EmailSender = Shopping_Tools_Web.Services.EmailSender;
 
 namespace Shopping_Tools_Web
 {
@@ -43,6 +45,7 @@ namespace Shopping_Tools_Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddScoped<Storage>();
             services.AddBlazoredModal();
 
             services.AddTransient<IEmailSender, EmailSender>();
@@ -65,17 +68,18 @@ namespace Shopping_Tools_Web
                 app.UseHsts();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
+            app.UseAuthentication();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -85,7 +89,6 @@ namespace Shopping_Tools_Web
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
-
         }
     }
 }

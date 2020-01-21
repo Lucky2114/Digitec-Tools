@@ -19,23 +19,11 @@ namespace Shopping_Tools.Source
     public class Storage
     {
         private readonly FirestoreDb _database;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
-        private readonly Shops? _currentShop;
 
-        private static Storage _instance;
-
-        public static Storage GetInstance(AuthenticationStateProvider authenticationStateProvider, Shops? currentShop)
+        public Storage()
         {
-            Console.WriteLine("Google Application Credentials: " +
-                              Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
-            return _instance ??= new Storage(authenticationStateProvider, currentShop);
-        }
-
-        private Storage(AuthenticationStateProvider authenticationStateProvider, Shops? currentShop)
-        {
-            _authenticationStateProvider = authenticationStateProvider;
+            Console.WriteLine("Google Application Credentials: " + Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
             _database = FirestoreDb.Create("digitec-tools");
-            _currentShop = currentShop;
         }
 
         private async Task<DocumentReference> SetProduct(Product product)
@@ -61,9 +49,9 @@ namespace Shopping_Tools.Source
             return await Task.FromResult(document);
         }
 
-        public async Task<bool> AddNewProduct(Product product, UserData userData)
+        public async Task<bool> AddNewProduct(Product product, UserData userData, AuthenticationStateProvider authenticationStateProvider)
         {
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
             if (!authState.User.Identity.IsAuthenticated)
                 return await Task.FromResult(false);
 
@@ -89,15 +77,17 @@ namespace Shopping_Tools.Source
             }
         }
 
-        public async Task<List<Product>> GetProductsForUser()
+        public async Task<List<Product>> GetProductsForUser(AuthenticationStateProvider authenticationStateProvider, Shops shop)
         {
-            var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
             if (!user.Identity.IsAuthenticated)
                 return null;
 
             var res = new List<Product>();
             //Select from firestore where user collection contains user.Name
+
+
 
             var query = _database.CollectionGroup("Users").WhereEqualTo("Email", user.Identity.Name);
             var querySnapshot = await query.GetSnapshotAsync();
@@ -107,7 +97,7 @@ namespace Shopping_Tools.Source
             {
                 var product = await matchedUser.Reference.Parent.Parent.GetSnapshotAsync();
                 product.TryGetValue("OnlineShopName", out string shopName);
-                if (!shopName.Equals(_currentShop?.GetName()))
+                if (!shopName.Equals(shop.GetName()))
                 {
                     continue;
                 }
@@ -129,9 +119,9 @@ namespace Shopping_Tools.Source
             return await Task.FromResult(res);
         }
 
-        public async Task<bool> RemoveUserFromProduct(Product product)
+        public async Task<bool> RemoveUserFromProduct(Product product, AuthenticationStateProvider authenticationStateProvider)
         {
-            var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
 
             var productCollectionReference = _database.Collection("Products");
