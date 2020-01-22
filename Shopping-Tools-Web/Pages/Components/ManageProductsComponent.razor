@@ -63,8 +63,13 @@
     {
         if (firstRender)
         {
-            await UpdateProductsTable();
+            //await UpdateProductsTable();
         }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdateProductsTable();
     }
 
     private async Task UpdateProductsTable()
@@ -75,14 +80,17 @@
 
     private async Task RemoveProduct(Product product)
     {
-        //await Storage.GetInstance(AuthenticationStateProvider, Shop).RemoveUserFromProduct(product);
+        await StorageInjected.RemoveUserFromProduct(product, AuthenticationStateProvider);
         await UpdateProductsTable();
     }
 
     private void ShowModal()
     {
         Modal.OnClose += ModalClosed;
-        Modal.Show<RegisterProductComponent>("Register A New Product");
+        var modalParams = new ModalParameters();
+        modalParams.Add("OnlineShop", Shop);
+        
+        Modal.Show<RegisterProductComponent>("Register A New Product", modalParams);
     }
 
     private async void ModalClosed(ModalResult modalResult)

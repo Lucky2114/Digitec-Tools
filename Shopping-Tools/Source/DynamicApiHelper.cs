@@ -1,4 +1,6 @@
-﻿using Shopping_Tools.Data.Enums;
+﻿using System;
+using Shopping_Tools.Data.Enums;
+using Shopping_Tools_Api_Services.Core.Digitec;
 
 namespace Shopping_Tools.Source
 {
@@ -6,19 +8,24 @@ namespace Shopping_Tools.Source
     {
         public static string GetName(this Shops shop)
         {
-            return shop switch
-            {
-                Shops.Digitec => "Digitec",
-                _ => ""
-            };
+            return shop.ToString();
         }
 
-        public static Shops? ShopNameToEnum(string shopName)
+        public static T ShopNameToEnum<T>(string shopName)
         {
-            switch (shopName)
+            return (T) Enum.Parse(typeof(T), shopName, true);
+        }
+
+        public static IApi GetInstance(this Shops shop)
+        {
+            try
             {
-                case "Digitec":
-                    return Shops.Digitec;
+                var instance = Activator.CreateInstance(Type.GetType(shop.ToString()));
+                return (IApi) instance;
+            }
+            catch
+            {
+                Console.WriteLine("Failed to instantiate class. Wrong class name maybe?");
             }
             return null;
         }

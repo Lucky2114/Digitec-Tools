@@ -1,25 +1,17 @@
-﻿@using Shopping_Tools_Api_Services.Core.Digitec
+﻿@using Shopping_Tools.Data.Enums
+@using Shopping_Tools_Api_Services.Core.Digitec
 <div class="container">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <MatTabGroup>
         @if (ImplementedShops != null)
         {
             @foreach (var shop in ImplementedShops)
             {
-                <li class="nav-item">
-                    <a class="nav-link active" id="@shop.GetHashCode() + '-ID'" data-toggle="tab" href="#@shop.GetHashCode()" role="tab" aria-controls="home" aria-selected="true">@shop.OnlineShopName</a>
-                </li>
+                <MatTab Label="@shop.OnlineShopName">
+                    <ManageProductsComponent Shop="@DynamicApiHelper.ShopNameToEnum<Shops>(shop.OnlineShopName)" />
+                </MatTab>
             }
         }
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        @if (ImplementedShops != null)
-        {
-            @foreach (var shop in ImplementedShops)
-            {
-                <div class="tab-pane fade show active" id="@shop.GetHashCode()" role="tabpanel" aria-labelledby="home-tab">Digitec Content</div>
-            }
-        }
-    </div>
+    </MatTabGroup>
 </div>
 
 

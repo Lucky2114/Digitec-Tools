@@ -1,4 +1,6 @@
-﻿@using Shopping_Tools_Web.Data
+﻿@using System.Reflection.Metadata.Ecma335
+@using Shopping_Tools.Data.Enums
+@using Shopping_Tools_Web.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IModalService ModalService
 @inject Storage StorageInjected
@@ -38,13 +40,16 @@
     </Authorized>
 
     <NotAuthorized>
-        <NotAuthorizedComponent />
+        <NotAuthorizedComponent/>
     </NotAuthorized>
 </AuthorizeView>
 
 
 @code
 {
+    [CascadingParameter]
+    ModalParameters Parameters { get; set; }
+
     private RegisterProductModel _registerProductModel;
 
     private bool _spin = false;
@@ -59,11 +64,11 @@
         _spin = true;
         _disabled = true;
 
-        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected);
+        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected, Parameters.Get<Shops>("OnlineShop"));
         _spin = false;
         _disabled = false;
 
-        //Cancel or close based on result
+    //Cancel or close based on result
         ModalService.Close(result ? ModalResult.Ok(_registerProductModel.ProductUrl) : ModalResult.Cancel());
     }
 
