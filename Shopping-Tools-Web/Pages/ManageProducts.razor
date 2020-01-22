@@ -1,5 +1,4 @@
 ﻿@page "/ManageProducts"
-@using Shopping_Tools.Data.Enums
 @using Shopping_Tools_Api_Services.Core.Brack
 @using Shopping_Tools_Api_Services.Core.Digitec
 
@@ -14,9 +13,14 @@
 </AuthorizeView>
 
 @code {
-    private readonly List<IApi> _implementedShops = new List<IApi>()
+    private List<IApi> _implementedShops;
+
+    protected override void OnInitialized()
     {
-        new Digitec(),
-        new Brack()
-    };
+        //Get all implemented API classes:
+        _implementedShops = DynamicApiHelper.GetAllImplementingClasses();
+        this.StateHasChanged();
+        base.OnInitialized();
+    }
+
 }

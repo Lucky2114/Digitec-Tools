@@ -20,7 +20,7 @@ namespace Shopping_Tools_Daemon
                 new ChangesToPriceTask(10)
             };
 
-            foreach (ITask task in tasks)
+            foreach (var task in tasks)
             {
                 Console.WriteLine("Starting Task..");
                 task.StartTask();

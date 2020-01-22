@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services;
-using Shopping_Tools.Data.Enums;
 using Shopping_Tools_Api_Services.Core.Digitec;
 
 // This Class Library provides:
@@ -78,7 +77,7 @@ namespace Shopping_Tools.Source
             }
         }
 
-        public async Task<List<Product>> GetProductsForUser(AuthenticationStateProvider authenticationStateProvider, Shops shop)
+        public async Task<List<Product>> GetProductsForUser(AuthenticationStateProvider authenticationStateProvider, IApi shop)
         {
             var authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
@@ -98,7 +97,7 @@ namespace Shopping_Tools.Source
             {
                 var product = await matchedUser.Reference.Parent.Parent.GetSnapshotAsync();
                 product.TryGetValue("OnlineShopName", out string shopName);
-                if (!shopName.Equals(shop.GetName()))
+                if (!shopName.Equals(shop.OnlineShopName))
                 {
                     continue;
                 }
@@ -174,7 +173,10 @@ namespace Shopping_Tools.Source
         {
             foreach (var product in products)
             {
-                var apiRes = await new Digitec().GetProductInfo(product["Url"].ToString());
+                var shopName = product["OnlineShopName"].ToString();
+                var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
+                
+                var apiRes = await apiInstance.GetProductInfo(product["Url"].ToString());
                 if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
                 {
                     throw new Exception("Product Id's don't match! This is an API error.");

@@ -1,5 +1,5 @@
 ﻿@using System.Reflection.Metadata.Ecma335
-@using Shopping_Tools.Data.Enums
+@using Shopping_Tools_Api_Services.Core.Digitec
 @using Shopping_Tools_Web.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IModalService ModalService
@@ -64,7 +64,7 @@
         _spin = true;
         _disabled = true;
 
-        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected, Parameters.Get<Shops>("OnlineShop"));
+        var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected, Parameters.Get<IApi>("OnlineShop"));
         _spin = false;
         _disabled = false;
 

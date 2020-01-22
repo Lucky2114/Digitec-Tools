@@ -1,5 +1,4 @@
-﻿@using Shopping_Tools.Data.Enums
-@using Shopping_Tools_Api_Services.Core.Digitec
+﻿@using Shopping_Tools_Api_Services.Core.Digitec
 <div class="container">
     <MatTabGroup>
         @if (ImplementedShops != null)
@@ -7,7 +6,7 @@
             @foreach (var shop in ImplementedShops)
             {
                 <MatTab Label="@shop.OnlineShopName">
-                    <ManageProductsComponent Shop="@GetShop(shop.OnlineShopName)" />
+                    <ManageProductsComponent Shop="@shop" />
                 </MatTab>
             }
         }
@@ -19,9 +18,4 @@
 
     [Parameter]
     public List<IApi> ImplementedShops { get; set; }
-
-    private Shops GetShop(string shopName)
-    {
-        return DynamicApiHelper.ShopNameToEnum<Shops>(shopName);
-    }
 }
