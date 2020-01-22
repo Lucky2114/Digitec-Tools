@@ -7,12 +7,12 @@
             @foreach (var shop in ImplementedShops)
             {
                 <MatTab Label="@shop.OnlineShopName">
-                    <ManageProductsComponent Shop="@DynamicApiHelper.ShopNameToEnum<Shops>(shop.OnlineShopName)" />
+                    <ManageProductsComponent Shop="@GetShop(shop.OnlineShopName)" />
                 </MatTab>
             }
         }
     </MatTabGroup>
-</div>
+</div>.
 
 
 @code {
@@ -20,4 +20,8 @@
     [Parameter]
     public List<IApi> ImplementedShops { get; set; }
 
+    private Shops GetShop(string shopName)
+    {
+        return DynamicApiHelper.ShopNameToEnum<Shops>(shopName);
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Shopping_Tools.Data.Enums;
+using Shopping_Tools_Api_Services.Core.Brack;
 using Shopping_Tools_Api_Services.Core.Digitec;
 
 namespace Shopping_Tools.Source
@@ -18,15 +19,17 @@ namespace Shopping_Tools.Source
 
         public static IApi GetInstance(this Shops shop)
         {
-            try
+            //TODO Fix this:
+            Type type = Type.GetType(strFullyQualifiedName);
+            if (type != null)
+                return Activator.CreateInstance(type);
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var instance = Activator.CreateInstance(Type.GetType(shop.ToString()));
-                return (IApi) instance;
+                type = asm.GetType(strFullyQualifiedName);
+                if (type != null)
+                    return Activator.CreateInstance(type);
             }
-            catch
-            {
-                Console.WriteLine("Failed to instantiate class. Wrong class name maybe?");
-            }
+
             return null;
         }
     }

@@ -12,7 +12,8 @@ namespace Shopping_Tools_Web.Source
     {
         public static async Task<bool> RegisterNewProduct(string productUrl, string email, AuthenticationStateProvider authenticationStateProvider, Storage storageInstance, Shops shop)
         {
-            var product = await new Digitec().GetProductInfo(productUrl);
+            //Dynamically create the instance of the API class
+            var product = await shop.GetInstance().GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 
             //var storage = Storage.GetInstance(authenticationStateProvider, DynamicApiHelper.ShopNameToEnum(product.OnlineShopName));
