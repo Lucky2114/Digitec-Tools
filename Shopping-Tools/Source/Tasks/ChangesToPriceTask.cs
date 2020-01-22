@@ -81,7 +81,7 @@ namespace Shopping_Tools.Source.Tasks
 
                 //Now update the database
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
-                Console.WriteLine("Updating the product by fetching Digitec");
+                Console.WriteLine("Updating the product by fetching the online shops");
                 await storage.UpdateAllProducts(result);
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
 

@@ -9,11 +9,13 @@ namespace Shopping_Tools_Api_Services.Core
     {
         internal static string ExtractIdFromUrl(string url)
         {
-            if (Validation.IsValidDigitecUrl(url))
-            {
-                return url.Split("-").Last().Split("?").First();
-            }
-            return "";
+            return url.Split("-").Last().Split("?").First();
+        }
+
+        internal static Uri RemoveParameters(this Uri uri)
+        {
+            var path = uri.ToString().Split("?").First();
+            return new Uri(path);
         }
     }
 }

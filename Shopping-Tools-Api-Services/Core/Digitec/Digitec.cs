@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services.Config;
 using Shopping_Tools_Api_Services.Models;
@@ -13,9 +14,26 @@ namespace Shopping_Tools_Api_Services.Core.Digitec
         {
             OnlineShopName = "Digitec";
         }
+
+        public bool IsValidUrl(string url)
+        {
+            Uri uri;
+            try
+            {
+                uri = new Uri(url);
+            }
+            catch
+            {
+                //Url is not in the correct format
+                return false;
+            }
+
+            return uri.Host.Equals("www.digitec.ch", StringComparison.OrdinalIgnoreCase) && uri.AbsolutePath.Contains("/product/");
+        }
+
         public async Task<Product> GetProductInfo(string productUrl)
         {
-            if (!Validation.IsValidDigitecUrl(productUrl)) return null;
+            if (!IsValidUrl(productUrl)) return null;
             //Problem: CSS classes are randomized => use index
 
             var doc = await HttpHelper.GetDocument(productUrl);

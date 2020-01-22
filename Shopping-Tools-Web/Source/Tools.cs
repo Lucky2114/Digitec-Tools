@@ -11,6 +11,9 @@ namespace Shopping_Tools_Web.Source
     {
         public static async Task<bool> RegisterNewProduct(string productUrl, string email, AuthenticationStateProvider authenticationStateProvider, Storage storageInstance, IApi shop)
         {
+            if (!shop.IsValidUrl(productUrl))
+                return await Task.FromResult(false);
+            
             var product = await shop.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 
