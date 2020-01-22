@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Shopping_Tools.Data.Enums;
 using Shopping_Tools_Api_Services.Core.Brack;
 using Shopping_Tools_Api_Services.Core.Digitec;
@@ -20,14 +21,18 @@ namespace Shopping_Tools.Source
         public static IApi GetInstance(this Shops shop)
         {
             //TODO Fix this:
-            Type type = Type.GetType(strFullyQualifiedName);
-            if (type != null)
-                return Activator.CreateInstance(type);
-            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+
+            string strFullyQualifiedName = "Shopping_Tools_Api_Services.Core." + shop.ToString();
+            try
             {
-                type = asm.GetType(strFullyQualifiedName);
-                if (type != null)
-                    return Activator.CreateInstance(type);
+                var y = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())
+                    .Where(x => typeof(IApi).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                    .Select(x => x.Name).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                
             }
 
             return null;
