@@ -3,15 +3,15 @@
 
 <div class="container align-content-center">
     <EditForm Model="@model" OnValidSubmit="@OnValidSubmit" Context="formContext">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
 
-        <InputText class="form-control" id="product" @bind-Value="@model.Email" placeholder="E-Mail Address" />
-        <InputText class="form-control" id="product" @bind-Value="@model.Password" placeholder="Password" />
+        <InputText class="form-control" id="email" @bind-Value="@model.Email" placeholder="E-Mail Address"/>
+        <InputText class="form-control" id="password" @bind-Value="@model.Password" placeholder="Password"/>
 
         @*<br/>
             <InputText class="form-control" id="email" @bind-Value="@RegisterProductModel.Email" placeholder="Your E-Mail Address"/>*@
-        <br />
+        <br/>
 
         <button class="btn btn-primary" type="submit">Login</button>
     </EditForm>
@@ -24,4 +24,5 @@
     {
         
     }
+
 }
