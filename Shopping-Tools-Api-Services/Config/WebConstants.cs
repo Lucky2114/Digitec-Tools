@@ -22,4 +22,10 @@ namespace Shopping_Tools_Api_Services.Config
         internal const string ProductPriceClassName = "price";
         internal const string ProductOldPriceClassName = "regularPrice";
     }
+
+    internal static class MediamarktWebConstants
+    {
+        internal const string ProductDetailId = "product-details";
+        internal const string PriceDetailClassName = "price-details";
+    }
 }

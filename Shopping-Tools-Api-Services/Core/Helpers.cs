@@ -9,7 +9,7 @@ namespace Shopping_Tools_Api_Services.Core
     {
         internal static string ExtractIdFromUrl(string url)
         {
-            return url.Split("-").Last().Split("?").First();
+            return (url.Split("-").Last().Split("?").First()).Replace(".html", "");
         }
 
         internal static Uri RemoveParameters(this Uri uri)
