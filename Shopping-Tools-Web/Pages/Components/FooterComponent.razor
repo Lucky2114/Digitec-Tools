@@ -1,5 +1,22 @@
-﻿<footer class="fixed-bottom">
-    <div class="text-center align-content-center">
-        <BuyMeACoffeeComponent />
+﻿@using Microsoft.Extensions.Configuration
+<footer class="fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-4 align-self-end">
+                <div class="align-content-center justify-content-center">
+                    <GitHubComponent/>
+                </div>
+            </div>
+            <div class="col-4 align-self-end">
+                <div class="text-center">
+                    <p>© Kevin Müller @DateTime.Now.Year</p>
+                </div>
+            </div>
+            <div class="col-4 align-self-end">
+                <div class="text-right align-content-end">
+                    <BuyMeACoffeeComponent/>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>

@@ -22,6 +22,7 @@ namespace Shopping_Tools.Source
 
         public Storage()
         {
+
             Console.WriteLine("Google Application Credentials: " + Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
             _database = FirestoreDb.Create("digitec-tools");
         }

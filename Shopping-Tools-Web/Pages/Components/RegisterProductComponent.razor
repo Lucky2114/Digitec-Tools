@@ -12,10 +12,8 @@
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
-                <InputText class="form-control" id="product" @bind-Value="@_registerProductModel.ProductUrl" placeholder="Product Url"/>
+                <InputText class="mt-" id="product" @bind-Value="@_registerProductModel.ProductUrl" placeholder="Product Url"/>
 
-                @*<br/>
-                    <InputText class="form-control" id="email" @bind-Value="@RegisterProductModel.Email" placeholder="Your E-Mail Address"/>*@
                 <br/>
 
                 <button class="btn btn-primary" type="submit" disabled=@_disabled>
