@@ -70,7 +70,8 @@ namespace Shopping_Tools_Api_Services.Core.Brack
                 PriceCurrent = price,
                 PriceOld = priceOld,
                 ProductId = productUrl,
-                ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl)
+                ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
+                Currency = "CHF" //I think it's safe to assume, that brack only has CHF as currency
             });
         }
     }

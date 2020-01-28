@@ -14,5 +14,6 @@ namespace Shopping_Tools_Api_Services.Models
         public string ProductIdSimple { get; set; }
         public string Url { get; set; }
         public string OnlineShopName { get; set; }
+        public string Currency { get; set; }
     }
 }

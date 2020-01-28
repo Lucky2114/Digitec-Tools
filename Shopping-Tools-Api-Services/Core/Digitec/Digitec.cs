@@ -80,7 +80,8 @@ namespace Shopping_Tools_Api_Services.Core.Digitec
                 ProductId = productUrl,
                 ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
                 Url = productUrl,
-                OnlineShopName = "Digitec"
+                OnlineShopName = "Digitec",
+                Currency = "CHF" //I think it's safe to assume, that digitec only has CHF as currency
             };
             return await Task.FromResult(productInfo);
         }
