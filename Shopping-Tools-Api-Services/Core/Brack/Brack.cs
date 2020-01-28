@@ -55,11 +55,19 @@ namespace Shopping_Tools_Api_Services.Core.Brack
                 .Descendants().First(x => x.Attributes.Any(y => y.Name.Equals("content")));
             var price = priceNode.InnerText.Trim();
 
-            var priceOldNode = doc.DocumentNode.Descendants()
-                .First(x => x.HasClass(BrackWebConstants.ProductPricingSectionClassName)).Descendants("span")
-                .First(x => x.HasClass(BrackWebConstants.ProductOldPriceClassName))
-                .Descendants().First(x => x.Attributes.Any(y => y.Name.Equals("content")));
-            var priceOld = priceOldNode.InnerText.Trim();
+            var priceOld = "";
+            try
+            {
+                var priceOldNode = doc.DocumentNode.Descendants()
+                    .First(x => x.HasClass(BrackWebConstants.ProductPricingSectionClassName)).Descendants("span")
+                    .First(x => x.HasClass(BrackWebConstants.ProductOldPriceClassName))
+                    .Descendants().First(x => x.Attributes.Any(y => y.Name.Equals("content")));
+                priceOld = priceOldNode.InnerText.Trim();
+            }
+            catch
+            {
+                //No old price
+            }
 
             return await Task.FromResult(new Product()
             {
