@@ -7,33 +7,22 @@
 
 <AuthorizeView Context="authContext">
     <Authorized>
-        <div class="container align-content-center">
+        <div class="container align-content-center text-center justify-content-center">
             <EditForm Model="@_registerProductModel" OnValidSubmit="@OnValidSubmit" Context="formContext">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
 
-                <InputText class="mt-" id="product" @bind-Value="@_registerProductModel.ProductUrl" placeholder="Product Url"/>
+                <p>
+                    <MatTextField Label="Product Url" @bind-Value="_registerProductModel.ProductUrl"/>
+                </p>
 
                 <br/>
-
-                <button class="btn btn-primary" type="submit" disabled=@_disabled>
-                    @if (_spin)
-                    {
-                        <div class="row btn-loading">
-                            <div class="col-xs-6">
-                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            </div>
-                            <div class="col-xs-6">
-                                <div>Loading..</div>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div>Submit</div>
-                    }
-                </button>
+                <MatButton Disabled="@_loading" Type="submit" Raised="true">Add</MatButton>
             </EditForm>
+            @if (_loading)
+            {
+                <MatProgressBar Indeterminate="true"></MatProgressBar>
+            }
         </div>
     </Authorized>
 
@@ -50,8 +39,7 @@
 
     private RegisterProductModel _registerProductModel;
 
-    private bool _spin = false;
-    private bool _disabled = false;
+    private bool _loading = false;
 
     private async Task OnValidSubmit()
     {
@@ -59,12 +47,10 @@
         var user = authState.User;
 
     //update button state
-        _spin = true;
-        _disabled = true;
+        _loading = true;
 
         var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected, Parameters.Get<IApi>("OnlineShop"));
-        _spin = false;
-        _disabled = false;
+        _loading = false;
 
     //Cancel or close based on result
         ModalService.Close(result ? ModalResult.Ok(_registerProductModel.ProductUrl) : ModalResult.Cancel());

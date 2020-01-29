@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider;
 <BlazoredModal/>
 
 <div class="main">
@@ -24,6 +25,22 @@
                         <MatListItem Href="/ManageProducts">
                             Manage Products
                         </MatListItem>
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <MatListItem Href="/Identity/Account/Login">
+                                    Login
+                                </MatListItem>
+                                <MatListItem Href="/Identity/Account/Register">
+                                    Register
+                                </MatListItem>
+                            </NotAuthorized>
+                            <Authorized>
+                                <MatListItem Href="/Identity/Account/Manage">
+                                    @_authenticationState.User.Identity.Name
+                                </MatListItem>
+                            </Authorized>
+                        </AuthorizeView>
+
                     </MatList>
                     @*<LoginDisplay/>*@
                 </MatDrawer>
@@ -43,9 +60,15 @@
 @code
 {
     bool _opened = true;
+    AuthenticationState? _authenticationState = null;
 
     void ButtonClicked()
     {
         _opened = !_opened;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
     }
 }

@@ -7,6 +7,12 @@
 @inject IMatToaster Toaster
 
 <div class="container">
+    @if (_loading)
+    {
+        <div style="width: 100%; padding-top: 1rem;">
+            <MatProgressBar Indeterminate="true"></MatProgressBar>
+        </div>
+    }
     @if (_products?.Count > 0)
     {
         <MatTable Items="@_products" class="mat-elevation-z5">
@@ -59,6 +65,7 @@
     public IApi Shop { get; set; }
 
     private List<Product> _products = new List<Product>();
+    private bool _loading = true;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -67,7 +74,10 @@
 
     private async Task UpdateProductsTable()
     {
+        _loading = true;
+        this.StateHasChanged();
         _products = await StorageInjected.GetProductsForUser(AuthenticationStateProvider, Shop);
+        _loading = false;
         this.StateHasChanged();
     }
 
@@ -100,3 +110,4 @@
     }
 
 }
+
