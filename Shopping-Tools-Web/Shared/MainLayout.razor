@@ -1,11 +1,51 @@
 ﻿@inherits LayoutComponentBase
-<BlazoredModal />
+<BlazoredModal/>
 
 <div class="main">
-    <NavBar />
-    <div class="content px-4">
-        @Body
-    </div>
+    <MatAppBarContainer>
+        <MatAppBar Fixed="true">
+            <MatAppBarRow>
+                <MatAppBarSection>
+                    <MatIconButton Icon="menu" OnClick="@((e) => ButtonClicked())"></MatIconButton>
+                    <MatAppBarTitle>Shopping-Tools</MatAppBarTitle>
+                </MatAppBarSection>
+                <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                    <MatIconButton Icon="favorite"></MatIconButton>
+                </MatAppBarSection>
+            </MatAppBarRow>
+        </MatAppBar>
+        <MatAppBarContent>
+            <MatDrawerContainer Style="width: 100vw; height: 100vh;">
+                <MatDrawer @bind-Opened="@_opened" Mode="@MatDrawerMode.Modal">
+                    <MatList>
+                        <MatListItem Href="/">
+                            Home
+                        </MatListItem>
+                        <MatListItem Href="/ManageProducts">
+                            Manage Products
+                        </MatListItem>
+                    </MatList>
+                    @*<LoginDisplay/>*@
+                </MatDrawer>
+                <MatDrawerContent>
+                    <div class="content px-4">
+                        @Body
+                    </div>
+                </MatDrawerContent>
+            </MatDrawerContainer>
+        </MatAppBarContent>
+    </MatAppBarContainer>
 
-    <FooterComponent />
+
+    <FooterComponent/>
 </div>
+
+@code
+{
+    bool _opened = true;
+
+    void ButtonClicked()
+    {
+        _opened = !_opened;
+    }
+}
