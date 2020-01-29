@@ -212,3 +212,6 @@ app {
     background-color: #17a2b8 !important;
     height: 100vh;
 }
+.button:focus {
+    outline: none !important;
+}
