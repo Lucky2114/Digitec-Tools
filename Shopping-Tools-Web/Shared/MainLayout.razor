@@ -27,25 +27,25 @@
         </MatAppBar>
         <MatAppBarContent>
             <MatDrawerContainer Style="width: 100vw; height: 100%;">
-                <MatDrawer @bind-Opened="@_opened" Mode="@MatDrawerMode.Modal">
+                <MatDrawer OpenedChanged="@DrawerOpenedChanged" Opened="@AppState.DrawerIsOpened" Mode="@MatDrawerMode.Modal">
                     <MatList>
-                        <MatListItem Href="/">
+                        <MatListItem Href="/" OnClick="ListItemClicked">
                             Home
                         </MatListItem>
-                        <MatListItem Href="/ManageProducts">
+                        <MatListItem Href="/ManageProducts" OnClick="ListItemClicked">
                             Manage Products
                         </MatListItem>
                         <AuthorizeView>
                             <NotAuthorized>
-                                <MatListItem Href="/Identity/Account/Login">
+                                <MatListItem Href="/Identity/Account/Login" OnClick="ListItemClicked">
                                     Login
                                 </MatListItem>
-                                <MatListItem Href="/Identity/Account/Register">
+                                <MatListItem Href="/Identity/Account/Register" OnClick="ListItemClicked">
                                     Register
                                 </MatListItem>
                             </NotAuthorized>
                             <Authorized>
-                                <MatListItem Href="/Identity/Account/Manage">
+                                <MatListItem Href="/Identity/Account/Manage" OnClick="ListItemClicked">
                                     @_authenticationState.User.Identity.Name
                                 </MatListItem>
                             </Authorized>
@@ -73,12 +73,21 @@
 
 @code
 {
-    bool _opened;
     AuthenticationState _authenticationState = null;
+
+    void DrawerOpenedChanged(bool state)
+    {
+        AppState.SetDrawerOpened(state);
+    }
 
     void ButtonClicked()
     {
-        _opened = !_opened;
+        AppState.SetDrawerOpened(!AppState.DrawerIsOpened);
+    }
+
+    void ListItemClicked()
+    {
+        AppState.SetDrawerOpened(false);
     }
 
     protected override async Task OnParametersSetAsync()
