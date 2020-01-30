@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthenticationStateProvider;
-<BlazoredModal/>
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AppState AppState
+<BlazoredModal />
 
 <div class="main">
     <MatAppBarContainer>
@@ -11,7 +12,16 @@
                     <MatAppBarTitle>Shopping-Tools</MatAppBarTitle>
                 </MatAppBarSection>
                 <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                    <MatIconButton Icon="favorite"></MatIconButton>
+                    <MatIconButton Link="https://github.com/kevin-mueller/Shopping-Tools">
+                        <div class="d-flex align-items-center justify-content-center align-content-center">
+                            <i class="fab fa-github"></i>
+                        </div>
+                    </MatIconButton>
+                    <MatIconButton Link="https://www.buymeacoffee.com/KevinMueller">
+                        <div class="d-flex align-items-center justify-content-center align-content-center">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                    </MatIconButton>
                 </MatAppBarSection>
             </MatAppBarRow>
         </MatAppBar>
@@ -42,25 +52,29 @@
                         </AuthorizeView>
 
                     </MatList>
-                    @*<LoginDisplay/>*@
                 </MatDrawer>
                 <MatDrawerContent>
+                    <div style="width: 100%;">
+                        @if (AppState.AppIsLoading)
+                        {
+                            <MatProgressBar Indeterminate="true"></MatProgressBar>
+                        }
+                    </div>
                     <div class="content px-4">
                         @Body
                     </div>
+
+                    <FooterComponent />
                 </MatDrawerContent>
             </MatDrawerContainer>
         </MatAppBarContent>
     </MatAppBarContainer>
-
-
-    <FooterComponent/>
 </div>
 
 @code
 {
-    bool _opened = true;
-    AuthenticationState? _authenticationState = null;
+    bool _opened;
+    AuthenticationState _authenticationState = null;
 
     void ButtonClicked()
     {
@@ -70,5 +84,15 @@
     protected override async Task OnParametersSetAsync()
     {
         _authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
     }
 }

@@ -24,6 +24,7 @@ using Shopping_Tools_Web.Areas.Identity;
 using Shopping_Tools_Web.Data;
 using Shopping_Tools_Web.Services;
 using EmailSender = Shopping_Tools_Web.Services.EmailSender;
+using Shopping_Tools_Web.Source;
 
 namespace Shopping_Tools_Web
 {
@@ -44,7 +45,7 @@ namespace Shopping_Tools_Web
                 options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddRazorPages();
+            IMvcBuilder builder = services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<Storage>();
@@ -53,7 +54,8 @@ namespace Shopping_Tools_Web
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
             services.AddScoped<HttpClient>();
-            
+            services.AddScoped<AppState>();
+
             services.AddMatToaster(config =>
             {
                 config.Position = MatToastPosition.BottomCenter;
@@ -70,6 +72,7 @@ namespace Shopping_Tools_Web
         {
             if (env.IsDevelopment())
             {
+                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
@@ -84,7 +87,7 @@ namespace Shopping_Tools_Web
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            
+
             app.UseAuthentication();
 
             app.UseHttpsRedirection();

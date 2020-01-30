@@ -4,60 +4,54 @@
 @using Shopping_Tools_Api_Services.Core.Digitec
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Storage StorageInjected
+@inject AppState AppState
 @inject IMatToaster Toaster
 
-<div class="container">
-    @if (_loading)
-    {
-        <div style="width: 100%; padding-top: 1rem;">
-            <MatProgressBar Indeterminate="true"></MatProgressBar>
-        </div>
-    }
-    @if (_products?.Count > 0)
-    {
-        <MatTable Items="@_products" class="mat-elevation-z5">
-            <MatTableHeader>
-                <th>
-                    <div>Product Id</div>
-                </th>
-                <th>
-                    <div>Product Name</div>
-                </th>
-                <th>
-                    <div>Product Link</div>
-                </th>
-                <th>
-                    <div>Delete</div>
-                </th>
-            </MatTableHeader>
-            <MatTableRow>
-                <td>@context.ProductIdSimple</td>
-                <td style="width: 40% !important;">
-                    <strong>@context.Brand</strong> @context.Name
-                </td>
-                <td style="width: 100% !important;">@context.Url</td>
-                <td>
-                    <div class="align-content-center">
-                        <button class="btn btn-danger" @onclick="@(e => RemoveProduct(context))">
-                            Delete
-                        </button>
-                    </div>
-                </td>
-            </MatTableRow>
-        </MatTable>
-    }
-    else
-    {
-        <div class="align-content-center justify-content-center text-center">
-            <br/>
-            <br/>
-            <h2>No Data Available</h2>
-        </div>
-    }
+    <div class="container">
+        @if (_products?.Count > 0)
+        {
+            <MatTable Items="@_products" class="mat-elevation-z5">
+                <MatTableHeader>
+                    <th>
+                        <div>Product Id</div>
+                    </th>
+                    <th>
+                        <div>Product Name</div>
+                    </th>
+                    <th>
+                        <div>Product Link</div>
+                    </th>
+                    <th>
+                        <div>Delete</div>
+                    </th>
+                </MatTableHeader>
+                <MatTableRow>
+                    <td>@context.ProductIdSimple</td>
+                    <td style="width: 40% !important;">
+                        <strong>@context.Brand</strong> @context.Name
+                    </td>
+                    <td style="width: 100% !important;">@context.Url</td>
+                    <td>
+                        <div class="align-content-center">
+                            <MatButton Icon="delete" Raised="true" OnClick="@(e => RemoveProduct(context))">
+                                Delete
+                            </MatButton>
+                        </div>
+                    </td>
+                </MatTableRow>
+            </MatTable>
+        }
+        else
+        {
+            <div class="align-content-center justify-content-center text-center">
+                <br />
+                <br />
+                <h2>No Data Available</h2>
+            </div>
+        }
 
-    <MatButton OnClick="@ShowModal" Raised="true">Add New Product</MatButton>
-
-</div>
+        <MatButton OnClick="@ShowModal" Raised="true">Add New Product</MatButton>
+    </div>
 
 @code {
 
@@ -74,10 +68,10 @@
 
     private async Task UpdateProductsTable()
     {
-        _loading = true;
+        AppState.SetAppLoading(true);
         this.StateHasChanged();
         _products = await StorageInjected.GetProductsForUser(AuthenticationStateProvider, Shop);
-        _loading = false;
+        AppState.SetAppLoading(false);
         this.StateHasChanged();
     }
 
@@ -108,6 +102,5 @@
         Toaster.Add("An Error occured while trying to register the product.", MatToastType.Danger);
         StateHasChanged();
     }
-
 }
 
