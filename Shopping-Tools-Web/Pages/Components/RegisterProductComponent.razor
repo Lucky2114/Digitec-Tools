@@ -46,14 +46,13 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-    //update button state
+        //update button state
         _loading = true;
 
         var result = await Tools.RegisterNewProduct(_registerProductModel.ProductUrl, user.Identity.Name, AuthenticationStateProvider, StorageInjected, Parameters.Get<IApi>("OnlineShop"));
         _loading = false;
 
-    //Cancel or close based on result
-        ModalService.Close(result ? ModalResult.Ok(_registerProductModel.ProductUrl) : ModalResult.Cancel());
+        ModalService.Close(ModalResult.Ok(result));
     }
 
     protected override void OnInitialized()

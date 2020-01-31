@@ -7,7 +7,19 @@ namespace Shopping_Tools.Source
 {
     public static class UserNotifier
     {
-        public static async Task NotifyUsersForProduct(string productSimpleId, string message)
+        /// <summary>
+        /// Notify all users that are registered for the product.
+        /// </summary>
+        /// <param name="productSimpleId">
+        ///    The ID of the product
+        /// </param>
+        /// <param name="message">$
+        ///    The message to be sent to the users
+        /// </param>
+        /// <returns>
+        ///    The amount of users notified
+        /// </returns>
+        public static async Task<int> NotifyUsersForProduct(string productSimpleId, string message)
         {
             //Get all users for the product => and send mail for everyone.
             var usersToSendTo = await new Storage().GetUsersForProduct(productSimpleId);
@@ -22,7 +34,8 @@ namespace Shopping_Tools.Source
                     Console.WriteLine("Couldn't send Email. Something wrong with the data.");
                 }
             }
-            
+
+            return await Task.FromResult(usersToSendTo.Count);
         }
     }
 }

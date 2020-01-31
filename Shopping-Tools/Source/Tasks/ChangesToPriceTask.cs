@@ -13,11 +13,11 @@ namespace Shopping_Tools.Source.Tasks
         private bool shouldAbort;
         public Task Task { get; set; }
 
-        private readonly double intervall;
+        private readonly double _interval;
 
-        public ChangesToPriceTask(double intervallInMinutes)
+        public ChangesToPriceTask(double intervalInMinutes)
         {
-            intervall = intervallInMinutes;
+            _interval = intervalInMinutes;
         }
 
         public void StartTask()
@@ -39,7 +39,7 @@ namespace Shopping_Tools.Source.Tasks
                 var timer = new TimerPlus()
                 {
                     AutoReset = false,
-                    Interval = TimeSpan.FromMinutes(intervall).TotalMilliseconds
+                    Interval = TimeSpan.FromMinutes(_interval).TotalMilliseconds
                 };
                 timer.Start();
 
@@ -60,15 +60,18 @@ namespace Shopping_Tools.Source.Tasks
 
                         if (priceOld != priceCurrent)
                         {
-                            string message =
+                            var message =
                                 $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} ! \n" +
                                 "\n" +
-                                $"Here's the link: {currentProduct["Url"]}";
+                                $"Here's the link: {currentProduct["Url"]}" +
+                                $"\n\n" +
+                                $"Edit Account Settings: ";
 
                             Console.WriteLine(message);
-                            Console.WriteLine("Notifiying Users...");
-                            await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
+                            Console.WriteLine("Notifying Users...");
+                            var notifiedUsers = await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
                                 message);
+                            Console.WriteLine($"Notified {notifiedUsers} users.");
                         }
                         else
                         {
@@ -87,7 +90,7 @@ namespace Shopping_Tools.Source.Tasks
 
                 if (timer.TimeLeft > 0)
                 {
-                    //sleep the remaining time of the intervall
+                    //sleep the remaining time of the interval
                     Console.WriteLine($"Sleeping for {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds.");
                     Thread.Sleep(Convert.ToInt32(timer.TimeLeft));
                 }

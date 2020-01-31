@@ -9,15 +9,16 @@ namespace Shopping_Tools_Web.Source
 {
     public static class Tools
     {
-        public static async Task<bool> RegisterNewProduct(string productUrl, string email, AuthenticationStateProvider authenticationStateProvider, Storage storageInstance, IApi shop)
+        public static async Task<RegisterProductResult> RegisterNewProduct(string productUrl, string email, AuthenticationStateProvider authenticationStateProvider, Storage storageInstance, IApi shop)
         {
             if (!shop.IsValidUrl(productUrl))
-                return await Task.FromResult(false);
+                return await Task.FromResult(RegisterProductResult.InvalidUrl);
             
             var product = await shop.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
-
-            return await storageInstance.AddNewProduct(product, userData, authenticationStateProvider);
+            
+            var result = await storageInstance.AddNewProduct(product, userData, authenticationStateProvider);
+            return result ? RegisterProductResult.Ok : RegisterProductResult.InternalError;
         }
     }
 }
