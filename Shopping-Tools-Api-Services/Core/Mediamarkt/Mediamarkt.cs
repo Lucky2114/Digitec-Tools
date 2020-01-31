@@ -1,15 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
-using Shopping_Tools_Api_Services.Config;
+﻿using Shopping_Tools_Api_Services.Config;
 using Shopping_Tools_Api_Services.Core.Digitec;
 using Shopping_Tools_Api_Services.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Shopping_Tools_Api_Services.Core.Mediamarkt
 {
     public class Mediamarkt : IApi
     {
+        public string TestUrl { get => "https://www.mediamarkt.ch/de/product/_apple-airpods-2019-2nd-gen-1913640.html"; set { } }
+
         public Mediamarkt()
         {
             OnlineShopName = "Mediamarkt";
@@ -38,11 +39,10 @@ namespace Shopping_Tools_Api_Services.Core.Mediamarkt
             var doc = await HttpHelper.GetDocument(productUrl);
             var productDetailNode = doc.DocumentNode.Descendants("div")
                 .First(x => x.Id.Equals(MediamarktWebConstants.ProductDetailId));
-            
-            
+
             var productTitleNode = productDetailNode.Descendants("h1")
                 .First(x => x.Attributes["itemprop"].Value.Equals("name"));
-            
+
             var name = productTitleNode.InnerText;
 
             var priceDetailNode = doc.DocumentNode.Descendants("div")
@@ -53,19 +53,21 @@ namespace Shopping_Tools_Api_Services.Core.Mediamarkt
             var brand = "";
             var currency = "";
             var price = "";
-            
+
             foreach (var item in metaTags)
             {
-                var att = item.Attributes["itemprop"]; 
+                var att = item.Attributes["itemprop"];
                 if (att == null) continue;
                 switch (att.Value)
                 {
                     case "brand":
                         brand = item.Attributes["content"].Value;
                         break;
+
                     case "priceCurrency":
                         currency = item.Attributes["content"].Value;
                         break;
+
                     case "price":
                         price = item.Attributes["content"].Value;
                         break;

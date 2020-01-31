@@ -10,6 +10,9 @@ namespace Shopping_Tools_Api_Services.Core.Digitec
     {
         public string OnlineShopName { get; }
 
+        //The TestUrl is needed for the unit tests
+        public string TestUrl { get => "https://www.digitec.ch/de/s1/product/raspberry-pi-4-4g-model-b-full-starter-kit-universal-armv8-entwicklungsboard-kit-12428788"; set { } }
+
         public Digitec()
         {
             OnlineShopName = "Digitec";

@@ -1,7 +1,7 @@
-using Shopping_Tools_Api_Services;
 using NUnit.Framework;
+using Shopping_Tools.Source;
+using Shopping_Tools_Api_Services.Models;
 using System.Threading.Tasks;
-using Shopping_Tools_Api_Services.Core.Digitec;
 
 namespace Digitec_Api_Testing
 {
@@ -18,8 +18,29 @@ namespace Digitec_Api_Testing
         [Test]
         public async Task ProductInfoTest()
         {
-            var res = await new Digitec().GetProductInfo(productUrl);
-            Assert.IsNotNull(res);
+            foreach (var apiInstance in DynamicApiHelper.GetAllImplementingClasses())
+            {
+                var res = await apiInstance.GetProductInfo(apiInstance.TestUrl);
+                Assert.IsTrue(CheckProductInfo(res));
+            }
+        }
+
+        private bool CheckProductInfo(Product product)
+        {
+            bool error = false;
+            if (string.IsNullOrEmpty(product.Name) || string.IsNullOrEmpty(product.Url))
+                error = true;
+            try
+            {
+                if (product.PriceCurrent.ParseToDouble() <= 0)
+                    error = true;
+            }
+            catch
+            {
+                error = true;
+            }
+
+            return error;
         }
     }
 }

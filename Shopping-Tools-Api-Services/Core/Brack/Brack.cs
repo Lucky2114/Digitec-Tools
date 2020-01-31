@@ -11,6 +11,9 @@ namespace Shopping_Tools_Api_Services.Core.Brack
     {
         public string OnlineShopName { get; }
 
+        //The TestUrl is needed for the unit tests
+        public string TestUrl { get => "https://www.brack.ch/hailo-trittleiter-mk80-comfort-line-2-stufen-566919"; set { } }
+
         public Brack()
         {
             OnlineShopName = "Brack";
@@ -81,6 +84,16 @@ namespace Shopping_Tools_Api_Services.Core.Brack
                 ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
                 Currency = "CHF" //I think it's safe to assume, that brack only has CHF as currency
             });
+        }
+
+        Task<Product> IApi.GetProductInfo(string productUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IApi.IsValidUrl(string url)
+        {
+            throw new NotImplementedException();
         }
     }
 }
