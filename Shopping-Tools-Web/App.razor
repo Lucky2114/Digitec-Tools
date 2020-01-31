@@ -1,13 +1,28 @@
 <MatToastContainer />
-<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(Program).Assembly">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-</CascadingAuthenticationState>
+<MatThemeProvider Theme="@theme">
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingAuthenticationState>
+</MatThemeProvider>
+
+@code {
+    MatTheme theme = new MatTheme()
+    {
+        Primary = "#212121",
+        Secondary = "#3949ab",
+
+        //OnPrimary = "#484848",
+        //Surface = "#ffffff",
+        //OnSurface = "#ffffff",
+        //OnSecondary = "#6f74dd"
+    };
+}

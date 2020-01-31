@@ -44,12 +44,12 @@
     else
     {
         <div class="align-content-center justify-content-center text-center">
-            <br/>
-            <br/>
+            <br />
+            <br />
             <h2>No Data Available</h2>
         </div>
     }
-
+    <br />
     <MatButton OnClick="@ShowModal" Raised="true">Add New Product</MatButton>
 </div>
 
@@ -81,7 +81,7 @@
     }
 
     private void ShowModal()
-    {       
+    {
         Modal.OnClose += ModalClosed;
         var modalParams = new ModalParameters();
         modalParams.Add("OnlineShop", Shop);
@@ -93,7 +93,7 @@
     {
         if (modalResult.Data == null) return;
 
-        var modalResultData = (RegisterProductResult) modalResult.Data;
+        var modalResultData = (RegisterProductResult)modalResult.Data;
 
         switch (modalResultData)
         {

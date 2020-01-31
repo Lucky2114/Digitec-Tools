@@ -12,6 +12,13 @@
                     <MatAppBarTitle>Shopping-Tools</MatAppBarTitle>
                 </MatAppBarSection>
                 <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                    @if (_authenticationState.User.Identity.IsAuthenticated)
+                    {
+                        <MatListItem Href="/Identity/Account/Manage">
+                            @_authenticationState.User.Identity.Name
+                        </MatListItem>
+                    }
+
                     <MatIconButton Link="https://github.com/kevin-mueller/Shopping-Tools">
                         <div class="d-flex align-items-center justify-content-center align-content-center">
                             <i class="fab fa-github"></i>
@@ -50,7 +57,6 @@
                                 </MatListItem>
                             </Authorized>
                         </AuthorizeView>
-
                     </MatList>
                 </MatDrawer>
                 <MatDrawerContent>
@@ -63,7 +69,6 @@
                     <div class="content px-4">
                         @Body
                     </div>
-
                     <FooterComponent />
                 </MatDrawerContent>
             </MatDrawerContainer>
