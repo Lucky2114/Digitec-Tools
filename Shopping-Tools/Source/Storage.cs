@@ -22,8 +22,8 @@ namespace Shopping_Tools.Source
 
         public Storage()
         {
-
-            Console.WriteLine("Google Application Credentials: " + Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
+            Console.WriteLine("Google Application Credentials: " +
+                              Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS"));
             _database = FirestoreDb.Create("digitec-tools");
         }
 
@@ -43,14 +43,16 @@ namespace Shopping_Tools.Source
                 {"PriceOld", product.PriceOld},
                 {"ProductIdSimple", product.ProductIdSimple},
                 {"Url", product.Url},
-                {"OnlineShopName", product.OnlineShopName}
+                {"OnlineShopName", product.OnlineShopName},
+                {"Currency", product.Currency}
             };
 
             await document.SetAsync(data);
             return await Task.FromResult(document);
         }
 
-        public async Task<bool> AddNewProduct(Product product, UserData userData, AuthenticationStateProvider authenticationStateProvider)
+        public async Task<bool> AddNewProduct(Product product, UserData userData,
+            AuthenticationStateProvider authenticationStateProvider)
         {
             var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
             if (!authState.User.Identity.IsAuthenticated)
@@ -78,7 +80,8 @@ namespace Shopping_Tools.Source
             }
         }
 
-        public async Task<List<Product>> GetProductsForUser(AuthenticationStateProvider authenticationStateProvider, IApi shop)
+        public async Task<List<Product>> GetProductsForUser(AuthenticationStateProvider authenticationStateProvider,
+            IApi shop)
         {
             var authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
@@ -87,7 +90,6 @@ namespace Shopping_Tools.Source
 
             var res = new List<Product>();
             //Select from firestore where user collection contains user.Name
-
 
 
             var query = _database.CollectionGroup("Users").WhereEqualTo("Email", user.Identity.Name);
@@ -120,7 +122,8 @@ namespace Shopping_Tools.Source
             return await Task.FromResult(res);
         }
 
-        public async Task<bool> RemoveUserFromProduct(Product product, AuthenticationStateProvider authenticationStateProvider)
+        public async Task<bool> RemoveUserFromProduct(Product product,
+            AuthenticationStateProvider authenticationStateProvider)
         {
             var authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authenticationState.User;
@@ -176,7 +179,7 @@ namespace Shopping_Tools.Source
             {
                 var shopName = product["OnlineShopName"].ToString();
                 var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
-                
+
                 var apiRes = await apiInstance.GetProductInfo(product["Url"].ToString());
                 if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
                 {
