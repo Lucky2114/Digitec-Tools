@@ -82,18 +82,8 @@ namespace Shopping_Tools_Api_Services.Core.Brack
                 PriceOld = priceOld,
                 ProductId = productUrl,
                 ProductIdSimple = Helpers.ExtractIdFromUrl(productUrl),
-                Currency = "CHF" //I think it's safe to assume, that brack only has CHF as currency
+                Currency = "CHF" //It's Brack..
             });
-        }
-
-        Task<Product> IApi.GetProductInfo(string productUrl)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IApi.IsValidUrl(string url)
-        {
-            throw new NotImplementedException();
         }
     }
 }
