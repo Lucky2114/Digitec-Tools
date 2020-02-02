@@ -1,16 +1,39 @@
-﻿@page "/"
+﻿@using Shopping_Tools_Api_Services.Core
+@page "/"
 
 <div class="container">
     <div class="align-content-center text-center index-container">
         <h1>Welcome to Shopping-Tools!</h1>
-        <p>Digitec Tools is an Open Source Project. Please consider <a href="https://www.buymeacoffee.com/KevinMueller">supporting</a> it, so the poor Dev can afford the server costs.</p>
+        <p>Shopping Tools is an Open Source Project. Please consider <a href="https://www.buymeacoffee.com/KevinMueller">supporting</a> it, so the poor Dev can afford the server costs.</p>
         <br />
         <br />
 
         <h2>What can I do with it?</h2>
-        <p>For now you can: Take a Digitec product and get notified whenever the price changes.</p>
+        <p>You can take a product of any of the supported online shops and get notified when the price changes.</p>
         <br />
+        <br />
+        <p>Currently supported shops:</p>
+
+        @if (supportedShops != null)
+        {
+            @foreach (var shop in supportedShops)
+            {
+                <b>@shop.OnlineShopName</b>
+                <br />
+            }
+        }
+
         @* TODO Add links *@
         <p>But before you can do that, please Register / Login.</p>
     </div>
 </div>
+
+@code {
+
+    List<IApi> supportedShops = null;
+    protected override void OnInitialized()
+    {
+        supportedShops = DynamicApiHelper.GetAllImplementingClasses();
+        base.OnInitialized();
+    }
+}

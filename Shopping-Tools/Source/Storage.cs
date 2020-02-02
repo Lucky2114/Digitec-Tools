@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shopping_Tools_Api_Services;
 using Shopping_Tools_Api_Services.Core.Digitec;
+using Shopping_Tools_Api_Services.Core;
 
 // This Class Library provides:
 // 1. An interface to the database that stores the registered products

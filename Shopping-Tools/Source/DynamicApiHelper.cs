@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Shopping_Tools_Api_Services.Core;
 using Shopping_Tools_Api_Services.Core.Brack;
-using Shopping_Tools_Api_Services.Core.Digitec;
 
 namespace Shopping_Tools.Source
 {
