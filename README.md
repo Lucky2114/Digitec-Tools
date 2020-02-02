@@ -2,7 +2,7 @@
 Allows you to do stuff with online shops, that they don't want you to.
 This repository also contains Api's for various online shops.
 
-Use the Shopping-Tools-Api-Services.dll as an interface to the online shops. Currently the Api's is very limited. Fell free to contribute. :)
+Use the Shopping-Tools-Api-Services.dll as an interface to the online shops. Currently the Api's are very limited. Fell free to contribute. :)
 
 
 In order to build and run this on your own server, install the Admin SDK credentials json file from your Firebase Console.
