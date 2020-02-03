@@ -1,4 +1,4 @@
-﻿using Shopping_Tools.Source.Tasks;
+﻿using Shopping_Tools_Daemon.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

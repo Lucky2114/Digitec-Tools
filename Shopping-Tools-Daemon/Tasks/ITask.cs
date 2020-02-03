@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shopping_Tools.Source.Tasks
+namespace Shopping_Tools_Daemon.Tasks
 {
     public interface ITask
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shopping_Tools.Source;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Shopping_Tools.Source.Tasks
+namespace Shopping_Tools_Daemon.Tasks
 {
     public class ChangesToPriceTask : ITask
     {
