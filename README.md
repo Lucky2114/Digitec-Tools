@@ -1,4 +1,6 @@
 # Shopping-Tools
+![.NET Build](https://github.com/kevin-mueller/Shopping-Tools/workflows/.NET%20Build/badge.svg?branch=master)
+
 Allows you to do stuff with online shops, that they don't want you to.
 This repository also contains Api's for various online shops.
 
