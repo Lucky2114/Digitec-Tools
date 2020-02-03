@@ -37,39 +37,43 @@ namespace Shopping_Tools_Api_Services.Core.Mediamarkt
             if (!IsValidUrl(productUrl)) return null;
 
             var doc = await HttpHelper.GetDocument(productUrl);
-            var productDetailNode = doc.DocumentNode.Descendants("div")
-                .First(x => x.Id.Equals(MediamarktWebConstants.ProductDetailId));
+            //var productDetailNode = doc.DocumentNode.Descendants("div")
+            //    .First(x => x.Id.Equals(MediamarktWebConstants.ProductDetailId));
 
-            var productTitleNode = productDetailNode.Descendants("h1")
-                .First(x => x.Attributes["itemprop"].Value.Equals("name"));
+            //var productTitleNode = productDetailNode.Descendants("h1")
+            //    .First(x => x.Attributes["itemprop"].Value.Equals("name"));
 
-            var name = productTitleNode.InnerText;
+            //var name = productTitleNode.InnerText;
 
-            var priceDetailNode = doc.DocumentNode.Descendants("div")
-                .First(x => x.HasClass(MediamarktWebConstants.PriceDetailClassName));
+            //var priceDetailNode = doc.DocumentNode.Descendants("div")
+            //    .First(x => x.HasClass(MediamarktWebConstants.PriceDetailClassName));
 
-            var metaTags = priceDetailNode.SelectNodes("//meta");
+            var metaTags = doc.DocumentNode.SelectNodes("//meta");
 
             var brand = "";
             var currency = "";
             var price = "";
+            var name = "";
 
             foreach (var item in metaTags)
             {
-                var att = item.Attributes["itemprop"];
+                var att = item.Attributes["property"];
                 if (att == null) continue;
                 switch (att.Value)
                 {
-                    case "brand":
+                    case "product:brand":
                         brand = item.Attributes["content"].Value;
                         break;
 
-                    case "priceCurrency":
+                    case "product:price:currency":
                         currency = item.Attributes["content"].Value;
                         break;
 
-                    case "price":
+                    case "product:price:amount":
                         price = item.Attributes["content"].Value;
+                        break;
+                    case "og:title":
+                        name = item.Attributes["content"].Value;
                         break;
                 }
             }
