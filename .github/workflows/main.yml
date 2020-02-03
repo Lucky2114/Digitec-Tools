@@ -12,4 +12,4 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.101' # SDK Version to use.
-    - run: dotnet test Shopping-Tools-Api-Testing
+    - run: dotnet test
