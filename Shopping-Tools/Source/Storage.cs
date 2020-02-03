@@ -9,12 +9,6 @@ using Shopping_Tools_Api_Services;
 using Shopping_Tools_Api_Services.Core.Digitec;
 using Shopping_Tools_Api_Services.Core;
 
-// This Class Library provides:
-// 1. An interface to the database that stores the registered products
-// 2. Classes (Tasks) that contain a specific functionality. For Example checking for changes in the price.
-// 
-// These classes are instantiated in the Daemon Project, which then creates a new Thread for every Task.
-// The Task is supposed to run in the background, implementing a TaskInterface, that provides feedback and error logs.
 namespace Shopping_Tools.Source
 {
     public class Storage

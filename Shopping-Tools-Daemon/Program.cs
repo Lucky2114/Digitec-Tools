@@ -12,7 +12,8 @@ namespace Shopping_Tools_Daemon
     {
         static void Main(string[] args)
         {
-            //This Daemon just runs the tasks from the class library
+            /// This Daemon runs the tasks, implementing the ITask interface.
+            /// The tasks are running as background System.Threading.Tasks.
 
             List<ITask> tasks = new List<ITask>()
             {
