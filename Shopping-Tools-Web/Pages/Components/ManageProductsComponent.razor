@@ -30,7 +30,9 @@
                 <td style="width: 40% !important;">
                     <strong>@context.Brand</strong> @context.Name
                 </td>
-                <td style="width: 100% !important;">@context.Url</td>
+                <td style="width: 100% !important;">
+                    <a href="@context.Url">@context.Name</a>
+                </td>
                 <td>
                     <div class="align-content-center">
                         <MatButton Icon="delete" Raised="true" OnClick="@(e => RemoveProduct(context))">
