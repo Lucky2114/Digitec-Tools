@@ -18,7 +18,7 @@ These are all the Environment Variables you need to set:
 
 SHOPPINGTOOLSCONNECTIONSTRING={Connectionstring To the Identity Database}
 
-DIGITEC_TOOLS_GMAIL_CREDENTIALS={Path To The GMAIL Credentials File} (consists of user={email} \n and password={password}
+DIGITEC_TOOLS_GMAIL_CREDENTIALS={Path To The GMAIL SMTP Credentials File} (consists of user={email} \n and password={password}
 
 SendGridUser={User Name for SendGrid}
 
@@ -33,8 +33,6 @@ If hosting on Linux, write it directly to the service config file.
 The Identity System needs a running MySQL Server.
 On Windows use the installer: https://dev.mysql.com/downloads/windows/installer/8.0.html
 On Linux: https://raspberry-projects.com/pi/software_utilities/web-servers/mysql
-
-If mysqld for starting the server doesn't work, create a new folder named "data" in the root mysql directory.
 
 Create a new User afterwards and use it in the connection string.
 
