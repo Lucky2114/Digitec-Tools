@@ -66,7 +66,7 @@ namespace Shopping_Tools_Daemon.Tasks
                                 "\n" +
                                 $"Here's the link: {currentProduct["Url"]}" +
                                 $"\n\n" +
-                                $"Edit Account Settings: ";
+                                $"Edit Account Settings: https://www.shoppingtools.online/Identity/Account/Manage";
 
                             Console.WriteLine(message);
                             Console.WriteLine("Notifying Users...");

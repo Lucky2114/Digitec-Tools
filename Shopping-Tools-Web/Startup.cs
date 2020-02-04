@@ -1,30 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Blazored.Modal;
 using MatBlazor;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.HttpOverrides;
 using Shopping_Tools.Source;
-using Shopping_Tools_Web.Areas.Identity.Pages.Account;
 using Shopping_Tools_Web.Areas.Identity;
 using Shopping_Tools_Web.Data;
 using Shopping_Tools_Web.Services;
-using EmailSender = Shopping_Tools_Web.Services.EmailSender;
 using Shopping_Tools_Web.Source;
+using System;
+using System.Net.Http;
+using EmailSender = Shopping_Tools_Web.Services.EmailSender;
 
 namespace Shopping_Tools_Web
 {
@@ -43,8 +36,14 @@ namespace Shopping_Tools_Web
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Environment.GetEnvironmentVariable("SHOPPINGTOOLSCONNECTIONSTRING")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
             IMvcBuilder builder = services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
