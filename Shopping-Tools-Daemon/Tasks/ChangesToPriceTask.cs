@@ -55,6 +55,8 @@ namespace Shopping_Tools_Daemon.Tasks
                         var oldProduct = lastResult.Find(x =>
                             x.First(y => y.Key.Equals("ProductIdSimple")).Value
                                 .Equals(currentProduct["ProductIdSimple"].ToString()));
+                        if (oldProduct == null)
+                            continue;
 
                         double priceCurrent = currentProduct["PriceCurrent"].ToString().ParseToDouble();
                         double priceOld = oldProduct["PriceCurrent"].ToString().ParseToDouble();
