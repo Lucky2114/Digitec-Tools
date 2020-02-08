@@ -37,7 +37,22 @@ namespace Shopping_Tools_Api_Services.Core
             //return await Task.FromResult(doc);
 
             var web = new HtmlWeb();
-            return await web.LoadFromWebAsync(url);
+            HtmlDocument doc = new HtmlDocument();
+            try
+            {
+                doc = await web.LoadFromWebAsync(url);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                //Site not responding.
+                //try with webclient.
+                var client = new WebClient();
+                string html = client.DownloadString(url);
+                if (!string.IsNullOrEmpty(html))
+                    doc.LoadHtml(html);
+            }
+            return doc;
         }
 
         internal static WebProxy GetRandomProxy()

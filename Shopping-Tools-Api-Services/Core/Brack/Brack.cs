@@ -12,7 +12,7 @@ namespace Shopping_Tools_Api_Services.Core.Brack
         public string OnlineShopName { get; }
 
         //The TestUrl is needed for the unit tests
-        public string TestUrl { get => "https://www.brack.ch/hailo-trittleiter-mk80-comfort-line-2-stufen-566919"; set { } }
+        public string TestUrl { get => "https://www.brack.ch/sklz-basketball-micro-ball-673632"; set { } }
 
         public Brack()
         {
@@ -42,6 +42,9 @@ namespace Shopping_Tools_Api_Services.Core.Brack
             if (!IsValidUrl(productUrl)) return null;
 
             var doc = await HttpHelper.GetDocument(productUrl);
+            if (doc == null)
+                throw new Exception("Brack is not responding!");
+
 
             var productTitleNode = doc.DocumentNode.Descendants()
                 .First(x => x.HasClass(BrackWebConstants.ProductDetailClassName)).Descendants("h1").First();
