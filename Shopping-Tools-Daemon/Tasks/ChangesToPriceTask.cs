@@ -106,7 +106,7 @@ namespace Shopping_Tools_Daemon.Tasks
 
                 if (DateTime.Now.TimeOfDay.TotalHours == 14)
                 {
-                    await EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log");
+                    await EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log");
                 }
             }
 
