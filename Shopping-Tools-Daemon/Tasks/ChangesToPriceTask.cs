@@ -66,7 +66,7 @@ namespace Shopping_Tools_Daemon.Tasks
                         if (priceOld != priceCurrent)
                         {
                             var message =
-                                $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} instead of {oldProduct["PriceCurrent"]} ! \n" +
+                                $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} {currentProduct["Currency"]} instead of {oldProduct["PriceCurrent"]} {currentProduct["Currency"]}! \n" +
                                 "\n" +
                                 $"Here's the link: {currentProduct["Url"]}" +
                                 $"\n\n" +
