@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Net.Cache;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Shopping_Tools_Api_Services.Core
@@ -19,12 +20,13 @@ namespace Shopping_Tools_Api_Services.Core
 
             client.Headers.Add("User-Agent", _userAgent);
             client.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            client.Encoding = Encoding.UTF8;
 
             try
             {
                 var source = await client.DownloadStringTaskAsync(url);
 
-                Console.WriteLine($"Request through proxy successful");
+                Console.WriteLine("Request through proxy successful");
 
                 var doc = new HtmlDocument();
                 doc.LoadHtml(source);
