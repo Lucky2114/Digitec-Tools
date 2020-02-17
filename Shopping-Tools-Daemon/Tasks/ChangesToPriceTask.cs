@@ -37,10 +37,12 @@ namespace Shopping_Tools_Daemon.Tasks
             List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
             {
+                Random rand = new Random();
+                var randSleep = rand.Next(25000, 60000);
                 var timer = new TimerPlus()
                 {
                     AutoReset = false,
-                    Interval = TimeSpan.FromMinutes(_interval).TotalMilliseconds
+                    Interval = TimeSpan.FromMinutes(_interval).TotalMilliseconds + randSleep
                 };
                 timer.Start();
 
@@ -55,6 +57,8 @@ namespace Shopping_Tools_Daemon.Tasks
                         var oldProduct = lastResult.Find(x =>
                             x.First(y => y.Key.Equals("ProductIdSimple")).Value
                                 .Equals(currentProduct["ProductIdSimple"].ToString()));
+                        if (oldProduct == null)
+                            continue;
 
                         double priceCurrent = currentProduct["PriceCurrent"].ToString().ParseToDouble();
                         double priceOld = oldProduct["PriceCurrent"].ToString().ParseToDouble();
