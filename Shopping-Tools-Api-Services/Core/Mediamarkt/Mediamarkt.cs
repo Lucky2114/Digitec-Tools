@@ -32,11 +32,11 @@ namespace Shopping_Tools_Api_Services.Core.Mediamarkt
             return uri.Host.Equals("www.mediamarkt.ch", StringComparison.OrdinalIgnoreCase) && uri.AbsolutePath.Contains("/product/");
         }
 
-        public async Task<Product> GetProductInfo(string productUrl)
+        public async Task<Product> GetProductInfo(string productUrl, bool fastRequest = false)
         {
             if (!IsValidUrl(productUrl)) return null;
 
-            var doc = await HttpHelper.GetDocument(productUrl);
+            var doc = await HttpHelper.GetDocument(productUrl, fastRequest);
             //var productDetailNode = doc.DocumentNode.Descendants("div")
             //    .First(x => x.Id.Equals(MediamarktWebConstants.ProductDetailId));
 

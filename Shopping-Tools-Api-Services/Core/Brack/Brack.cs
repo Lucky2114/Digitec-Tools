@@ -37,11 +37,11 @@ namespace Shopping_Tools_Api_Services.Core.Brack
                    char.IsDigit(uri.AbsolutePath.ToCharArray().Last());
         }
 
-        public async Task<Product> GetProductInfo(string productUrl)
+        public async Task<Product> GetProductInfo(string productUrl, bool fastRequest = false)
         {
             if (!IsValidUrl(productUrl)) return null;
 
-            var doc = await HttpHelper.GetDocument(productUrl);
+            var doc = await HttpHelper.GetDocument(productUrl, fastRequest);
             if (doc == null)
                 throw new Exception("Brack is not responding!");
 

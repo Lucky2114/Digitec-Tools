@@ -11,12 +11,12 @@ namespace Shopping_Tools_Api_Services.Core
         //TODO Create list of user agents to rotate
         private const string _userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:x.x.x) Gecko/20041107 Firefox/x.x";
 
-        internal static async Task<HtmlDocument> GetDocument(string url)
+        internal static async Task<HtmlDocument> GetDocument(string url, bool fastRequest)
         {
-            var client = new WebClient
-            {
-                Proxy = ProxyHelper.GetInstance().GetRandomProxy()
-            };
+            var client = new WebClient();
+            if (!fastRequest)
+                client.Proxy = ProxyHelper.GetInstance().GetRandomProxy();
+
             client.Headers.Add("User-Agent", _userAgent);
             client.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
 
@@ -32,8 +32,8 @@ namespace Shopping_Tools_Api_Services.Core
             }
             catch
             {
-                Console.WriteLine("Connection through proxy timed out. Trying again.");
-                return await GetDocument(url);
+                Console.WriteLine("Connection through proxy failed. Trying again.");
+                return await GetDocument(url, fastRequest);
             }
         }
     }
