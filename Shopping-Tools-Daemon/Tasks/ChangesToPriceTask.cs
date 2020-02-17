@@ -93,6 +93,11 @@ namespace Shopping_Tools_Daemon.Tasks
                 await storage.UpdateAllProducts(result);
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
 
+                if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
+                {
+                    await EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log");
+                }
+
                 if (timer.TimeLeft > 0)
                 {
                     //sleep the remaining time of the interval
@@ -102,11 +107,6 @@ namespace Shopping_Tools_Daemon.Tasks
                 else
                 {
                     Console.WriteLine($"Updating the database took to long! Now {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds behind!");
-                }
-
-                if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
-                {
-                    await EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log");
                 }
             }
 
