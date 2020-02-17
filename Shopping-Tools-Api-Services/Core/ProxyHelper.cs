@@ -27,21 +27,25 @@ namespace Shopping_Tools_Api_Services.Core
         public WebProxy GetRandomProxy()
         {
             WebProxy proxy = null;
-            var jsonResult = new WebClient().DownloadString("https://api.getproxylist.com/proxy?protocol[]=http&allowsHttps=1");
-            RestProxyResult proxyResult = null;
-
+            string jsonResult = "";
             try
             {
-                proxyResult = JsonConvert.DeserializeObject<RestProxyResult>(jsonResult);
+                jsonResult = new WebClient().DownloadString("https://api.getproxylist.com/proxy?protocol[]=http&allowsHttps=1&maxConnectTime=2");
+                //jsonResult = new WebClient().DownloadString("http://pubproxy.com/api/proxy?type=http&https=true");
             }
             catch
             {
+                Console.WriteLine($"Reached request limit. {_usedProxies.Count} proxies in cache.");
                 //We're probably out of requests.
                 _requestLimitReached = true;
                 //Return a "cached" proxy.
                 if (_usedProxies.Count > 0)
+                {
+                    Console.WriteLine($"Using cached proxy: {proxy.Address}");
                     return _usedProxies[new Random().Next(_usedProxies.Count - 1)];
+                }
             }
+            RestProxyResult proxyResult = JsonConvert.DeserializeObject<RestProxyResult>(jsonResult);
 
             if (proxyResult != null)
             {
@@ -53,14 +57,16 @@ namespace Shopping_Tools_Api_Services.Core
                     _usedProxies.Clear();
                 }
 
-                proxy = new WebProxy($"{proxyResult.protocol}://{proxyResult.ip}", proxyResult.port);
+                proxy = new WebProxy(proxyResult.ip, proxyResult.port);
                 if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
                 {
                     _usedProxies.Add(proxy);
                 }
-
             }
 
+            if (proxy != null)
+                Console.WriteLine($"Using proxy: {proxy.Address}");
+            else Console.WriteLine("Not using any proxy");
             return proxy;
         }
     }
