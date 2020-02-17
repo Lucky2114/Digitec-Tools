@@ -17,17 +17,18 @@ namespace Shopping_Tools_Api_Services.Core
 
             // TODO:
             // Not sure if this bypasses the server cache.
-            var environmentProxy = Environment.GetEnvironmentVariable("HTTP_PROXY", EnvironmentVariableTarget.User);
+            //var environmentProxy = Environment.GetEnvironmentVariable("HTTP_PROXY", EnvironmentVariableTarget.User);
 
-            if (!string.IsNullOrEmpty(environmentProxy))
-            {
-                req.Proxy = new WebProxy
-                {
-                    Address = new Uri(environmentProxy),
-                    UseDefaultCredentials = true
-                };
-                req.UseDefaultCredentials = true;
-            }
+            //if (!string.IsNullOrEmpty(environmentProxy))
+            //{
+            //    req.Proxy = new WebProxy
+            //    {
+            //        Address = new Uri(environmentProxy),
+            //        UseDefaultCredentials = true
+            //    };
+            //    req.UseDefaultCredentials = true;
+            //}
+            req.Proxy = ProxyHelper.GetInstance().GetRandomProxy();
             req.UserAgent = _userAgent;
             req.Method = "GET";
             req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
