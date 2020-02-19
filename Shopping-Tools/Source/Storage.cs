@@ -1,13 +1,12 @@
-﻿using Shopping_Tools_Api_Services.Models;
-using Google.Cloud.Firestore;
+﻿using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Components.Authorization;
+using Shopping_Tools_Api_Services.Core;
+using Shopping_Tools_Api_Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Shopping_Tools_Api_Services;
-using Shopping_Tools_Api_Services.Core.Digitec;
-using Shopping_Tools_Api_Services.Core;
 
 namespace Shopping_Tools.Source
 {
@@ -86,7 +85,6 @@ namespace Shopping_Tools.Source
             var res = new List<Product>();
             //Select from firestore where user collection contains user.Name
 
-
             var query = _database.CollectionGroup("Users").WhereEqualTo("Email", user.Identity.Name);
             var querySnapshot = await query.GetSnapshotAsync();
             var matchedUsers = querySnapshot.Documents.ToList();
@@ -99,7 +97,6 @@ namespace Shopping_Tools.Source
                 {
                     continue;
                 }
-
 
                 product.TryGetValue("ProductIdSimple", out string id);
                 product.TryGetValue("Brand", out string brand);
@@ -168,21 +165,31 @@ namespace Shopping_Tools.Source
             return await Task.FromResult(products);
         }
 
-        public async Task UpdateAllProducts(IEnumerable<Dictionary<string, object>> products)
+        public void UpdateAllProducts(IEnumerable<Dictionary<string, object>> products)
         {
+            List<Task> pendingTasks = new List<Task>();
             foreach (var product in products)
             {
-                var shopName = product["OnlineShopName"].ToString();
-                var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
-
-                var apiRes = await apiInstance.GetProductInfo(product["Url"].ToString());
-                if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
+                Task task = new Task(delegate
                 {
-                    throw new Exception("Product Id's don't match! This is an API error.");
-                }
+                    var shopName = product["OnlineShopName"].ToString();
+                    var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
 
-                await SetProduct(apiRes);
+                    var apiRes = apiInstance.GetProductInfo(product["Url"].ToString()).Result;
+                    if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
+                        throw new Exception("Product Id's don't match! This is an API error.");
+
+                    var _ = SetProduct(apiRes).Result;
+                });
+                pendingTasks.Add(task);
+                task.Start();
             }
+
+            foreach (var item in pendingTasks)
+            {
+                item.Wait();
+            }
+            Console.WriteLine("Finished all requests");
         }
     }
 }

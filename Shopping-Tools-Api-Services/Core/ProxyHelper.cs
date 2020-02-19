@@ -24,6 +24,18 @@ namespace Shopping_Tools_Api_Services.Core
             _usedProxies = new List<WebProxy>();
         }
 
+        public void TryAddProxyToCache(WebProxy proxy)
+        {
+            lock (_usedProxies)
+            {
+                if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
+                {
+                    _usedProxies.Add(proxy);
+                    Console.WriteLine($"Added Proxy {proxy.Address} to cache");
+                }
+            }
+        }
+
         public WebProxy GetRandomProxy()
         {
             WebProxy proxy = null;
@@ -41,8 +53,9 @@ namespace Shopping_Tools_Api_Services.Core
                 //Return a "cached" proxy.
                 if (_usedProxies.Count > 0)
                 {
-                    Console.WriteLine($"Using cached proxy: {proxy.Address}");
-                    return _usedProxies[new Random().Next(_usedProxies.Count - 1)];
+                    var chachedProxy = _usedProxies[new Random().Next(_usedProxies.Count - 1)];
+                    Console.WriteLine($"Using cached proxy: {chachedProxy?.Address}");
+                    return chachedProxy;
                 }
             }
             RestProxyResult proxyResult = JsonConvert.DeserializeObject<RestProxyResult>(jsonResult);
@@ -58,10 +71,15 @@ namespace Shopping_Tools_Api_Services.Core
                 }
 
                 proxy = new WebProxy(proxyResult.ip, proxyResult.port);
-                if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
-                {
-                    _usedProxies.Add(proxy);
-                }
+
+                //Don't do this here. Do it in the HttpHelper; That way only working proxies are added to cache.
+                //lock (_usedProxies)
+                //{
+                //    if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
+                //    {
+                //        _usedProxies.Add(proxy);
+                //    }
+                //}
             }
 
             if (proxy != null)

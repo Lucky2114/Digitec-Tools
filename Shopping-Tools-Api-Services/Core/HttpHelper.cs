@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Net.Cache;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Shopping_Tools_Api_Services.Core
@@ -12,30 +11,45 @@ namespace Shopping_Tools_Api_Services.Core
         //TODO Create list of user agents to rotate
         private const string _userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:x.x.x) Gecko/20041107 Firefox/x.x";
 
-        internal static async Task<HtmlDocument> GetDocument(string url, bool fastRequest)
+        internal static async Task<HtmlDocument> GetDocument(string url, bool fastRequest, int failedAttemps = 0)
         {
-            var client = new WebClient();
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            var proxy = ProxyHelper.GetInstance().GetRandomProxy();
             if (!fastRequest)
-                client.Proxy = ProxyHelper.GetInstance().GetRandomProxy();
+                request.Proxy = proxy;
 
-            client.Headers.Add("User-Agent", _userAgent);
-            client.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            client.Encoding = Encoding.UTF8;
+            //request.Headers.Add("User-Agent", _userAgent);
+            request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            //request.Encoding = Encoding.UTF8;
+            request.Method = "GET";
+            request.Timeout = 10000;
 
             try
             {
-                var source = await client.DownloadStringTaskAsync(url);
+                if (failedAttemps > 5)
+                {
+                    Console.WriteLine("Too many failed attemps. Using no proxy.");
+                    request.Proxy = null;
+                }
 
-                Console.WriteLine("Request through proxy successful");
-
+                var source = await request.GetResponseAsync();
+                if (proxy != null)
+                {
+                    Console.WriteLine($"Request through proxy successful. URL = {url}");
+                    ProxyHelper.GetInstance().TryAddProxyToCache(proxy);
+                } else
+                {
+                    Console.WriteLine("Request without proxy successful");
+                }
                 var doc = new HtmlDocument();
-                doc.LoadHtml(source);
+                doc.Load(source.GetResponseStream());
                 return await Task.FromResult(doc);
             }
             catch
             {
                 Console.WriteLine("Connection through proxy failed. Trying again.");
-                return await GetDocument(url, fastRequest);
+                int tmp = failedAttemps += 1;
+                return await GetDocument(url, fastRequest, tmp);
             }
         }
     }

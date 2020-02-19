@@ -90,7 +90,7 @@ namespace Shopping_Tools_Daemon.Tasks
                 //Now update the database
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
                 Console.WriteLine("Updating the product by fetching the online shops");
-                await storage.UpdateAllProducts(result);
+                storage.UpdateAllProducts(result);
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
 
                 if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
