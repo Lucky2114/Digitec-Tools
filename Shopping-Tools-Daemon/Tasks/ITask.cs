@@ -10,5 +10,6 @@ namespace Shopping_Tools_Daemon.Tasks
         public Task Task { get; set; }
         public void StartTask();
         public void Abort();
+        public void RestartTask();
     }
 }

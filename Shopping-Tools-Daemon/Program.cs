@@ -27,11 +27,18 @@ namespace Shopping_Tools_Daemon
                 task.StartTask();
             }
 
-
             while (true)
             {
                 Console.WriteLine("Daemon Loop Logger: ");
-                Console.WriteLine($"Currently {tasks.Count} Tasks are running.");
+                foreach (var t in tasks)
+                {
+                    Console.WriteLine($"Task: {t.GetType().Name} - Status: {t.Task.Status.ToString()}");
+                    if (t.Task.Status == TaskStatus.Faulted)
+                    {
+                        Console.WriteLine($"Looks like the Task '{t.GetType().Name}' failed. => Restarting Task.");
+                        t.RestartTask();
+                    }
+                }
                 Thread.Sleep(5000);
             }
         }

@@ -30,7 +30,14 @@ namespace Shopping_Tools_Daemon.Tasks
             Task.Start();
         }
 
-        private async void Worker()
+        public void RestartTask()
+        {
+            Console.WriteLine("Restarting Task..");
+            Task.Dispose();
+            StartTask();
+        }
+
+        private void Worker()
         {
             Console.WriteLine("Task started");
             var storage = new Storage();
@@ -46,7 +53,7 @@ namespace Shopping_Tools_Daemon.Tasks
                 };
                 timer.Start();
 
-                var result = await storage.GetAllProducts();
+                var result = storage.GetAllProducts().Result;
                 Console.WriteLine($"Received {result.Count} products.");
 
                 if (lastResult != null)
@@ -74,8 +81,8 @@ namespace Shopping_Tools_Daemon.Tasks
 
                             Console.WriteLine(message);
                             Console.WriteLine("Notifying Users...");
-                            var notifiedUsers = await UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
-                                message);
+                            var notifiedUsers = UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
+                                message).Result;
                             Console.WriteLine($"Notified {notifiedUsers} users.");
                         }
                         else
@@ -95,7 +102,7 @@ namespace Shopping_Tools_Daemon.Tasks
 
                 if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
                 {
-                    await EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log");
+                    EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log").RunSynchronously();
                 }
 
                 if (timer.TimeLeft > 0)
