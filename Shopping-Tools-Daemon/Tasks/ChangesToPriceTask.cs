@@ -100,11 +100,6 @@ namespace Shopping_Tools_Daemon.Tasks
                 storage.UpdateAllProducts(result);
                 Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
 
-                if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
-                {
-                    EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log").RunSynchronously();
-                }
-
                 if (timer.TimeLeft > 0)
                 {
                     //sleep the remaining time of the interval
@@ -114,6 +109,12 @@ namespace Shopping_Tools_Daemon.Tasks
                 else
                 {
                     Console.WriteLine($"Updating the database took to long! Now {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds behind!");
+                }
+
+                //Send Log AFTER Sleep. If the products only take one sec to update, logs will be spammed every second.
+                if (Convert.ToInt32(DateTime.UtcNow.TimeOfDay.TotalHours) == 14)
+                {
+                    EmailSender.Send("kevin.mueller1@outlook.com", $"Latest updating routine took: {TimeSpan.FromMilliseconds(timer.Interval).TotalMinutes - TimeSpan.FromMilliseconds(timer.TimeLeft).TotalMinutes} minutes", "Daily Updating Routine Log").RunSynchronously();
                 }
             }
 
