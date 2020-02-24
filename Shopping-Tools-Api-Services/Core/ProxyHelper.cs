@@ -2,37 +2,76 @@
 using Shopping_Tools_Api_Services.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 
 namespace Shopping_Tools_Api_Services.Core
 {
     public class ProxyHelper
     {
-        private static ProxyHelper _instance;
+        private const string ProxyCacheFilePath = "proxies.json";
 
-        private readonly List<WebProxy> _usedProxies;
+        private static ProxyHelper _instance;
         private bool _requestLimitReached;
+
+        private readonly ReaderWriterLock _locker = new ReaderWriterLock();
 
         public static ProxyHelper GetInstance()
         {
             return _instance ?? (_instance = new ProxyHelper());
         }
 
-        private ProxyHelper()
-        {
-            _usedProxies = new List<WebProxy>();
-        }
-
         public void TryAddProxyToCache(WebProxy proxy)
         {
-            lock (_usedProxies)
+            List<WebProxy> proxies = GetCachedProxies();
+
+            //Only add the cache if it doesn't already exist
+            if (!proxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
             {
-                if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
+                proxies.Add(proxy);
+                Console.WriteLine($"Added Proxy {proxy.Address} to cache");
+            }
+
+            var jsonData = JsonConvert.SerializeObject(proxies);
+            try
+            {
+                _locker.AcquireWriterLock(TimeSpan.FromSeconds(10));
+                File.WriteAllText(ProxyCacheFilePath, jsonData);
+            }
+            finally
+            {
+                _locker.ReleaseWriterLock();
+            }
+        }
+
+        private List<WebProxy> GetCachedProxies()
+        {
+            List<WebProxy> proxies = new List<WebProxy>();
+
+            if (File.Exists(ProxyCacheFilePath))
+            {
+                using (var stream = File.Open(ProxyCacheFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    _usedProxies.Add(proxy);
-                    Console.WriteLine($"Added Proxy {proxy.Address} to cache");
+                    var jsonString = new StreamReader(stream).ReadToEnd();
+                    //If the deserializing returns null, set it to a new, empty list.
+                    proxies = JsonConvert.DeserializeObject<List<WebProxy>>(jsonString) ?? new List<WebProxy>();
                 }
+            }
+            return proxies;
+        }
+
+        private void ClearCachedProxies()
+        {
+            try
+            {
+                _locker.AcquireWriterLock(TimeSpan.FromSeconds(10));
+                File.Delete(ProxyCacheFilePath);
+            }
+            finally
+            {
+                _locker.ReleaseWriterLock();
             }
         }
 
@@ -47,13 +86,14 @@ namespace Shopping_Tools_Api_Services.Core
             }
             catch
             {
-                Console.WriteLine($"Reached request limit. {_usedProxies.Count} proxies in cache.");
+                var cachedProxies = GetCachedProxies();
+                Console.WriteLine($"Reached request limit. {cachedProxies.Count} proxies in cache.");
                 //We're probably out of requests.
                 _requestLimitReached = true;
                 //Return a "cached" proxy.
-                if (_usedProxies.Count > 0)
+                if (cachedProxies.Count > 0)
                 {
-                    var chachedProxy = _usedProxies[new Random().Next(_usedProxies.Count - 1)];
+                    var chachedProxy = cachedProxies[new Random().Next(cachedProxies.Count - 1)];
                     Console.WriteLine($"Using cached proxy: {chachedProxy?.Address}");
                     return chachedProxy;
                 }
@@ -66,20 +106,11 @@ namespace Shopping_Tools_Api_Services.Core
                 {
                     //This probably means that the request limit is once again refilled.
                     _requestLimitReached = false;
-                    //Flush the proxies list. They could be outdated by now.
-                    _usedProxies.Clear();
+                    //Clear the cached proxies. They could be outdated by now.
+                    ClearCachedProxies();
                 }
 
                 proxy = new WebProxy(proxyResult.ip, proxyResult.port);
-
-                //Don't do this here. Do it in the HttpHelper; That way only working proxies are added to cache.
-                //lock (_usedProxies)
-                //{
-                //    if (!_usedProxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
-                //    {
-                //        _usedProxies.Add(proxy);
-                //    }
-                //}
             }
 
             if (proxy != null)
