@@ -45,9 +45,10 @@ namespace Shopping_Tools_Api_Services.Core
                 doc.Load(source.GetResponseStream());
                 return await Task.FromResult(doc);
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Connection through proxy failed. Trying again.");
+                Console.WriteLine("Connection through proxy failed. Trying again. \n" +
+                    $"Exception: {ex.Message}");
                 int tmp = failedAttemps += 1;
                 return await GetDocument(url, fastRequest, tmp);
             }

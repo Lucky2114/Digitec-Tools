@@ -27,22 +27,22 @@ namespace Shopping_Tools_Api_Services.Core
         {
             List<WebProxy> proxies = GetCachedProxies();
 
-            //Only add the cache if it doesn't already exist
+            //Only add to the cache if it doesn't already exist
             if (!proxies.Any(x => x.Address.AbsoluteUri.Equals(proxy.Address.AbsoluteUri)))
             {
                 proxies.Add(proxy);
-                Console.WriteLine($"Added Proxy {proxy.Address} to cache");
-            }
+                var jsonData = JsonConvert.SerializeObject(proxies);
+                try
+                {
+                    _locker.AcquireWriterLock(TimeSpan.FromSeconds(10));
+                    File.WriteAllText(ProxyCacheFilePath, jsonData);
+                }
+                finally
+                {
+                    _locker.ReleaseWriterLock();
+                }
 
-            var jsonData = JsonConvert.SerializeObject(proxies);
-            try
-            {
-                _locker.AcquireWriterLock(TimeSpan.FromSeconds(10));
-                File.WriteAllText(ProxyCacheFilePath, jsonData);
-            }
-            finally
-            {
-                _locker.ReleaseWriterLock();
+                Console.WriteLine($"Added Proxy {proxy.Address} to cache");
             }
         }
 

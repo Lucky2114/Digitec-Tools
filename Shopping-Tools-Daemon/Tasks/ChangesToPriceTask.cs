@@ -76,8 +76,15 @@ namespace Shopping_Tools_Daemon.Tasks
 
                             Console.WriteLine(message);
                             Console.WriteLine("Notifying Users...");
-                            var notifiedUsers = UserNotifier.NotifyUsersForProduct(productFromDB.ProductIdSimple, message).Result;
-                            Console.WriteLine($"Notified {notifiedUsers} users.");
+                            try
+                            {
+                                var notifiedUsers = UserNotifier.NotifyUsersForProduct(productFromDB.ProductIdSimple, message).Result;
+                                Console.WriteLine($"Notified {notifiedUsers} users.");
+                            } catch (Exception ex)
+                            {
+                                Console.WriteLine("Notfifying users failed: \n" +
+                                    $"{ex.Message}");
+                            }
                         }
                         else
                         {
