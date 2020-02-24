@@ -95,6 +95,9 @@
     {
         if (modalResult.Data == null) return;
 
+        Toaster.Configuration.ShowProgressBar = true;
+        Toaster.Configuration.ShowCloseButton = true;
+
         var modalResultData = (RegisterProductResult)modalResult.Data;
 
         switch (modalResultData)

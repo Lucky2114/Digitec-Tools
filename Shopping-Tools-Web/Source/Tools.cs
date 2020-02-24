@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Shopping_Tools_Api_Services;
-using Shopping_Tools_Api_Services.Models;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Shopping_Tools.Source;
-using Microsoft.AspNetCore.Components.Authorization;
-using Shopping_Tools_Api_Services.Core.Digitec;
 using Shopping_Tools_Api_Services.Core;
+using Shopping_Tools_Api_Services.Models;
+using System.Threading.Tasks;
 
 namespace Shopping_Tools_Web.Source
 {
@@ -14,10 +12,10 @@ namespace Shopping_Tools_Web.Source
         {
             if (!shop.IsValidUrl(productUrl))
                 return await Task.FromResult(RegisterProductResult.InvalidUrl);
-            
+
             var product = await shop.GetProductInfo(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
-            
+
             var result = await storageInstance.AddNewProduct(product, userData, authenticationStateProvider);
             return result ? RegisterProductResult.Ok : RegisterProductResult.InternalError;
         }
