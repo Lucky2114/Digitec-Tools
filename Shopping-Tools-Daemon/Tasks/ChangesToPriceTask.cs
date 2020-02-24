@@ -39,6 +39,16 @@ namespace Shopping_Tools_Daemon.Tasks
 
         private void Worker()
         {
+            //TODO Revamp this.
+
+            //1. Get results from DB
+            //2. Foreach of this result, get the current info (via api-services) | Maybe only if there are users registered?
+            //3. Notify users if necessary 
+            //4. Update the SINGLE product (in the foreach loop)
+            //5. Sleep the remaining time
+
+
+
             Console.WriteLine("Task started");
             var storage = new Storage();
             List<Dictionary<string, object>> lastResult = null;
