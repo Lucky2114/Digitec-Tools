@@ -5,7 +5,6 @@ using Shopping_Tools_Api_Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Shopping_Tools.Source
@@ -190,6 +189,28 @@ namespace Shopping_Tools.Source
                 item.Wait();
             }
             Console.WriteLine("Finished all requests");
+        }
+
+        /// <summary>
+        /// Fetches the latest Product Information using the API, then updates the product on the database.
+        /// </summary>
+        /// <param name="product">
+        /// The product to update
+        /// </param>
+        /// <returns>
+        /// The updated product
+        /// </returns>
+        public async Task<Product> UpdateProduct(Product product)
+        {
+            var shopName = product.OnlineShopName;
+            var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
+
+            var apiRes = apiInstance.GetProductInfo(product.Url).Result;
+            if (!apiRes.ProductIdSimple.Equals(product.ProductIdSimple))
+                throw new Exception("Product Id's don't match! This is an API error.");
+
+            var _ = await SetProduct(apiRes);
+            return apiRes;
         }
     }
 }

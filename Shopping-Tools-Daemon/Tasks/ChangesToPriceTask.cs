@@ -1,9 +1,6 @@
 ﻿using Shopping_Tools.Source;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,19 +36,8 @@ namespace Shopping_Tools_Daemon.Tasks
 
         private void Worker()
         {
-            //TODO Revamp this.
-
-            //1. Get results from DB
-            //2. Foreach of this result, get the current info (via api-services) | Maybe only if there are users registered?
-            //3. Notify users if necessary 
-            //4. Update the SINGLE product (in the foreach loop)
-            //5. Sleep the remaining time
-
-
-
             Console.WriteLine("Task started");
             var storage = new Storage();
-            List<Dictionary<string, object>> lastResult = null;
             while (!shouldAbort)
             {
                 Random rand = new Random();
@@ -66,49 +52,48 @@ namespace Shopping_Tools_Daemon.Tasks
                 var result = storage.GetAllProducts().Result;
                 Console.WriteLine($"Received {result.Count} products.");
 
-                if (lastResult != null)
+                List<Task> pendingTasks = new List<Task>();
+
+                foreach (var item in result)
                 {
-                    foreach (var currentProduct in result)
+                    Task task = new Task(delegate
                     {
-                        //find this in the old product list by searching for the first matching ProductIdSimple. (It's unique so that's fine)
-                        var oldProduct = lastResult.Find(x =>
-                            x.First(y => y.Key.Equals("ProductIdSimple")).Value
-                                .Equals(currentProduct["ProductIdSimple"].ToString()));
-                        if (oldProduct == null)
-                            continue;
+                        //TODO If no users => continue;
+                        var productFromDB = Helpers.DictionaryToProduct(item);
+                        var productCurrent = storage.UpdateProduct(productFromDB).Result;
 
-                        double priceCurrent = currentProduct["PriceCurrent"].ToString().ParseToDouble();
-                        double priceOld = oldProduct["PriceCurrent"].ToString().ParseToDouble();
+                        double priceDB = productFromDB.PriceCurrent.ParseToDouble();
+                        double priceCurrent = productCurrent.PriceCurrent.ParseToDouble();
 
-                        if (priceOld != priceCurrent)
+                        if (priceCurrent != priceDB)
                         {
                             var message =
-                                $"{currentProduct["Brand"]} {currentProduct["Name"]} now costs {currentProduct["PriceCurrent"]} {currentProduct["Currency"]} instead of {oldProduct["PriceCurrent"]} {currentProduct["Currency"]}! \n" +
+                                $"{productCurrent.Brand} {productCurrent.Name} now costs {productCurrent.PriceCurrent} {productCurrent.Currency} instead of {productFromDB.PriceCurrent} {productFromDB.Currency}! \n" +
                                 "\n" +
-                                $"Here's the link: {currentProduct["Url"]}" +
+                                $"Here's the link: {productCurrent.Url}" +
                                 $"\n\n" +
                                 $"Edit Account Settings: https://www.shoppingtools.online/Identity/Account/Manage";
 
                             Console.WriteLine(message);
                             Console.WriteLine("Notifying Users...");
-                            var notifiedUsers = UserNotifier.NotifyUsersForProduct(currentProduct["ProductIdSimple"].ToString(),
-                                message).Result;
+                            var notifiedUsers = UserNotifier.NotifyUsersForProduct(productFromDB.ProductIdSimple, message).Result;
                             Console.WriteLine($"Notified {notifiedUsers} users.");
                         }
                         else
                         {
                             Console.WriteLine("Nothing Happened..");
                         }
-                    }
+                    });
+                    pendingTasks.Add(task);
+                    task.Start();
                 }
 
-                lastResult = result;
-
-                //Now update the database
-                Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
-                Console.WriteLine("Updating the product by fetching the online shops");
-                storage.UpdateAllProducts(result);
-                Console.WriteLine("Timer is now at: " + TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds.ToString() + " Seconds");
+                Console.WriteLine($"Waiting for {pendingTasks.Count} requests to finish..");
+                foreach (var item in pendingTasks)
+                {
+                    item.Wait();
+                }
+                Console.WriteLine("All requests finished!");
 
                 if (timer.TimeLeft > 0)
                 {
