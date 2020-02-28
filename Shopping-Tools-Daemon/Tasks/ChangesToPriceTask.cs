@@ -40,17 +40,17 @@ namespace Shopping_Tools_Daemon.Tasks
             var storage = new Storage();
             while (!shouldAbort)
             {
+
+                Random rand = new Random();
+                var randSleep = rand.Next(25000, 60000);
+                var timer = new TimerPlus()
+                {
+                    AutoReset = false,
+                    Interval = TimeSpan.FromMinutes(_interval).TotalMilliseconds + randSleep
+                };
                 try
                 {
-                    Random rand = new Random();
-                    var randSleep = rand.Next(25000, 60000);
-                    var timer = new TimerPlus()
-                    {
-                        AutoReset = false,
-                        Interval = TimeSpan.FromMinutes(_interval).TotalMilliseconds + randSleep
-                    };
                     timer.Start();
-
                     var result = storage.GetAllProducts().Result;
                     Console.WriteLine($"Received {result.Count} products.");
 
@@ -124,7 +124,11 @@ namespace Shopping_Tools_Daemon.Tasks
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Internal Error! => {ex.Message}");
+                    Console.WriteLine($"Internal Error! => {ex.Message} \n" +
+                        $"{ex.StackTrace} \n" +
+                        $"{ex.GetBaseException().StackTrace}");
+                    Console.WriteLine($"Something went wrong. Before restarting, I will wait {TimeSpan.FromMilliseconds(timer.TimeLeft).TotalSeconds} seconds.");
+                    Thread.Sleep(Convert.ToInt32(timer.TimeLeft));
                 }
             }
 

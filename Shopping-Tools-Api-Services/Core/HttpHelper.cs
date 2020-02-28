@@ -51,7 +51,7 @@ namespace Shopping_Tools_Api_Services.Core
             {
                 Console.WriteLine("Connection through proxy failed. Trying again. \n" +
                     $"Exception: {ex.Message}");
-                int tmp = failedAttemps += 1;
+                int tmp = failedAttemps++;
                 return await GetDocument(url, fastRequest, tmp);
             }
         }
