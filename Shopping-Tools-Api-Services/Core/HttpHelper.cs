@@ -8,50 +8,35 @@ namespace Shopping_Tools_Api_Services.Core
 {
     internal static class HttpHelper
     {
+        private const string ScraperApiBaseUrl = "http://api.scraperapi.com/";
+
         internal static async Task<HtmlDocument> GetDocumentAsync(string url, bool fastRequest, int failedAttemps = 0)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            //var proxy = ProxyHelper.GetInstance().GetRandomProxy();
+            //string apiKey = Environment.GetEnvironmentVariable("SCRAPERAPIKEY");
+            string apiKey = "5f1c929bc06a341c9752b18a361cdc4f";
+            if (string.IsNullOrEmpty(apiKey))
+                throw new Exception("Environment variable 'SCRAPERAPIKEY' not set.");
 
-            //if (!fastRequest)
-            //    request.Proxy = proxy;
+            var requestUrl = ScraperApiBaseUrl + $"?api_key={apiKey}&url={url}";
 
-            //request.Headers.Add("User-Agent", _userAgent);
+            var request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            //request.Encoding = Encoding.UTF8;
-            request.Method = "GET";
-            request.Timeout = 10000;
-            //request.Headers = GetHeaderCollection(url);
+            request.Timeout = (int)TimeSpan.FromSeconds(60).TotalMilliseconds;
 
-            //try
-            //{
-            //    if (failedAttemps > 5)
-            //    {
-            //        Console.WriteLine("Too many failed attemps. Using no proxy.");
-            //        request.Proxy = null;
-            //    }
+            var doc = new HtmlDocument();
+            try
+            {
+                Console.WriteLine($"Starting ScraperApi Request: {requestUrl}");
 
-            //    var source = await request.GetResponseAsync();
-            //    if (proxy != null)
-            //    {
-            //        Console.WriteLine($"Request through proxy successful. URL = {url}");
-            //        ProxyHelper.GetInstance().TryAddProxyToCache(proxy);
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Request without proxy successful");
-            //    }
-            //    var doc = new HtmlDocument();
-            //    doc.Load(source.GetResponseStream());
-            //    return await Task.FromResult(doc);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Connection through proxy failed. Trying again. \n" +
-            //        $"Exception: {ex.Message}");
-            //    int tmp = failedAttemps++;
-            //    return await GetDocumentAsync(url, fastRequest, tmp);
-            //}
+                var response = await request.GetResponseAsync();
+                var scrapedHtml = response.GetResponseStream();
+                doc.Load(scrapedHtml);
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine($"SCRAPERAPI Limit reached! {ex.Message}");
+            }
+            return await Task.FromResult(doc);
         }
 
         private static WebHeaderCollection GetHeaderCollection(string url)
