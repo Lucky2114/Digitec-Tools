@@ -40,7 +40,6 @@ namespace Shopping_Tools_Daemon.Tasks
             var storage = new Storage();
             while (!shouldAbort)
             {
-
                 Random rand = new Random();
                 var randSleep = rand.Next(25000, 60000);
                 var timer = new TimerPlus()
@@ -58,44 +57,8 @@ namespace Shopping_Tools_Daemon.Tasks
 
                     foreach (var item in result)
                     {
-                        Task task = new Task(delegate
-                        {
-                            //TODO If no users => continue;
-                            var productFromDB = Helpers.DictionaryToProduct(item);
-                            var productCurrent = storage.UpdateProduct(productFromDB).Result;
-
-                            double priceDB = productFromDB.PriceCurrent.ParseToDouble();
-                            double priceCurrent = productCurrent.PriceCurrent.ParseToDouble();
-
-                            if (priceCurrent != priceDB)
-                            {
-                                var message =
-                                    $"{productCurrent.Brand} {productCurrent.Name} now costs {productCurrent.PriceCurrent} {productCurrent.Currency} instead of {productFromDB.PriceCurrent} {productFromDB.Currency}! \n" +
-                                    "\n" +
-                                    $"Here's the link: {productCurrent.Url}" +
-                                    $"\n\n" +
-                                    $"Edit Account Settings: https://www.shoppingtools.online/Identity/Account/Manage";
-
-                                Console.WriteLine(message);
-                                Console.WriteLine("Notifying Users...");
-                                try
-                                {
-                                    var notifiedUsers = UserNotifier.NotifyUsersForProduct(productFromDB.ProductIdSimple, message).Result;
-                                    Console.WriteLine($"Notified {notifiedUsers} users.");
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine("Notfifying users failed: \n" +
-                                        $"{ex.Message}");
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Nothing Happened..");
-                            }
-                        });
+                        var task = Task.Run(() => WebRequestTask(item, storage));
                         pendingTasks.Add(task);
-                        task.Start();
                     }
 
                     Console.WriteLine($"Waiting for {pendingTasks.Count} requests to finish..");
@@ -132,13 +95,57 @@ namespace Shopping_Tools_Daemon.Tasks
                 }
             }
 
-
             Task = null;
         }
 
         public void Abort()
         {
             shouldAbort = true;
+        }
+
+        private void WebRequestTask(Dictionary<string, object> item, Storage storage)
+        {
+            try
+            {
+                //TODO If no users => continue;
+                var productFromDB = Helpers.DictionaryToProduct(item);
+                var productCurrent = storage.UpdateProduct(productFromDB).Result;
+
+                double priceDB = productFromDB.PriceCurrent.ParseToDouble();
+                double priceCurrent = productCurrent.PriceCurrent.ParseToDouble();
+
+                if (priceCurrent != priceDB)
+                {
+                    var message =
+                        $"{productCurrent.Brand} {productCurrent.Name} now costs {productCurrent.PriceCurrent} {productCurrent.Currency} instead of {productFromDB.PriceCurrent} {productFromDB.Currency}! \n" +
+                        "\n" +
+                        $"Here's the link: {productCurrent.Url}" +
+                        $"\n\n" +
+                        $"Edit Account Settings: https://www.shoppingtools.online/Identity/Account/Manage";
+
+                    Console.WriteLine(message);
+                    Console.WriteLine("Notifying Users...");
+                    try
+                    {
+                        //var notifiedUsers = UserNotifier.NotifyUsersForProduct(productFromDB.ProductIdSimple, message).Result;
+                        //Console.WriteLine($"Notified {notifiedUsers} users.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Notfifying users failed: \n" +
+                            $"{ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Nothing Happened..");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception within the task! => {ex.Message} \n" +
+                    $"{ex.StackTrace}");
+            }
         }
     }
 }

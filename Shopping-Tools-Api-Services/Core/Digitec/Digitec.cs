@@ -35,12 +35,12 @@ namespace Shopping_Tools_Api_Services.Core.Digitec
             return uri.Host.Equals("www.digitec.ch", StringComparison.OrdinalIgnoreCase) && uri.AbsolutePath.Contains("/product/");
         }
 
-        public async Task<Product> GetProductInfo(string productUrl, bool fastRequest = false)
+        public async Task<Product> GetProductInfoAsync(string productUrl, bool fastRequest = false)
         {
             if (!IsValidUrl(productUrl)) return null;
             //Problem: CSS classes are randomized => use index
 
-            var doc = await HttpHelper.GetDocument(productUrl, fastRequest);
+            var doc = await HttpHelper.GetDocumentAsync(productUrl, fastRequest);
             //var productTitleNode = doc.DocumentNode.Descendants().First(x => x.HasClass(DigitecWebConstants.ProductDetailClassName)).Descendants("h1").ToList()[DigitecWebConstants.ProductNameH1Index];
 
             //var brand = productTitleNode.Descendants("strong").TryFirst().InnerText;

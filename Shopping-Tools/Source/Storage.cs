@@ -174,7 +174,7 @@ namespace Shopping_Tools.Source
                     var shopName = product["OnlineShopName"].ToString();
                     var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
 
-                    var apiRes = apiInstance.GetProductInfo(product["Url"].ToString()).Result;
+                    var apiRes = apiInstance.GetProductInfoAsync(product["Url"].ToString()).Result;
                     if (!apiRes.ProductIdSimple.Equals(product["ProductIdSimple"].ToString()))
                         throw new Exception("Product Id's don't match! This is an API error.");
 
@@ -205,7 +205,7 @@ namespace Shopping_Tools.Source
             var shopName = product.OnlineShopName;
             var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
 
-            var apiRes = apiInstance.GetProductInfo(product.Url).Result;
+            var apiRes = apiInstance.GetProductInfoAsync(product.Url).Result;
             if (!apiRes.ProductIdSimple.Equals(product.ProductIdSimple))
                 throw new Exception("Product Id's don't match! This is an API error.");
 

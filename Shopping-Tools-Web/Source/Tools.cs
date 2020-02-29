@@ -13,7 +13,7 @@ namespace Shopping_Tools_Web.Source
             if (!shop.IsValidUrl(productUrl))
                 return await Task.FromResult(RegisterProductResult.InvalidUrl);
 
-            var product = await shop.GetProductInfo(productUrl);
+            var product = await shop.GetProductInfoAsync(productUrl);
             var userData = new UserData() { Email = email, IPv4 = "not implemented" };
 
             var result = await storageInstance.AddNewProduct(product, userData, authenticationStateProvider);

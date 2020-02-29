@@ -17,7 +17,7 @@ namespace Digitec_Api_Testing
         {
             foreach (var apiInstance in DynamicApiHelper.GetAllImplementingClasses())
             {
-                var res = await apiInstance.GetProductInfo(apiInstance.TestUrl, true);
+                var res = await apiInstance.GetProductInfoAsync(apiInstance.TestUrl, true);
                 Assert.IsTrue(CheckProductInfo(res));
             }
         }

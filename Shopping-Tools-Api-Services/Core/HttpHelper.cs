@@ -11,7 +11,7 @@ namespace Shopping_Tools_Api_Services.Core
         //TODO Create list of user agents to rotate
         private const string _userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:x.x.x) Gecko/20041107 Firefox/x.x";
 
-        internal static async Task<HtmlDocument> GetDocument(string url, bool fastRequest, int failedAttemps = 0)
+        internal static async Task<HtmlDocument> GetDocumentAsync(string url, bool fastRequest, int failedAttemps = 0)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             var proxy = ProxyHelper.GetInstance().GetRandomProxy();
@@ -52,7 +52,7 @@ namespace Shopping_Tools_Api_Services.Core
                 Console.WriteLine("Connection through proxy failed. Trying again. \n" +
                     $"Exception: {ex.Message}");
                 int tmp = failedAttemps++;
-                return await GetDocument(url, fastRequest, tmp);
+                return await GetDocumentAsync(url, fastRequest, tmp);
             }
         }
 
