@@ -37,7 +37,7 @@ namespace Shopping_Tools_Daemon.Tasks
         private void Worker()
         {
             Console.WriteLine("Task started");
-            var storage = new Storage();
+            //var storage = new Storage();
             while (!shouldAbort)
             {
                 Random rand = new Random();
@@ -50,14 +50,14 @@ namespace Shopping_Tools_Daemon.Tasks
                 try
                 {
                     timer.Start();
-                    var result = storage.GetAllProducts().Result;
+                    var result = new Storage().GetAllProducts().Result;
                     Console.WriteLine($"Received {result.Count} products.");
 
                     List<Task> pendingTasks = new List<Task>();
 
                     foreach (var item in result)
                     {
-                        var task = Task.Run(() => WebRequestTask(item, storage));
+                        var task = Task.Run(() => WebRequestTask(item, new Storage()));
                         pendingTasks.Add(task);
                     }
 

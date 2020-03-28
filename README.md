@@ -26,6 +26,8 @@ SendGridKey={Key From SendGrid}
 
 GOOGLE_APPLICATION_CREDENTIALS={Path To The Private Key You Just Generated}
 
+SCRAPERAPIKEY={Key from scraperapi.com}
+
 
 Windows: Use the GUI. Everything else is buggy as hell. (Login and out afterwards)
 If hosting on Linux, write it directly to the service config file.
