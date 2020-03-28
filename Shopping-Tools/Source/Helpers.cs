@@ -19,6 +19,9 @@ namespace Shopping_Tools.Source
                     sb.Append(c);
                 }
             }
+            if (string.IsNullOrEmpty(sb.ToString()))
+                return 0;
+
             //The format "179.5.- has a point at the end.
             if (sb.ToString().Last() == '.')
                 sb = sb.Remove(sb.ToString().Length -1, 1);

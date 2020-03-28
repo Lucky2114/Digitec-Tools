@@ -205,12 +205,12 @@ namespace Shopping_Tools.Source
             var shopName = product.OnlineShopName;
             var apiInstance = DynamicApiHelper.GetApiInstanceFromName(shopName);
 
-            var apiRes = apiInstance.GetProductInfoAsync(product.Url).Result;
+            var apiRes = await apiInstance.GetProductInfoAsync(product.Url);
             if (!apiRes.ProductIdSimple.Equals(product.ProductIdSimple))
                 throw new Exception("Product Id's don't match! This is an API error.");
 
             var _ = await SetProduct(apiRes);
-            return apiRes;
+            return await Task.FromResult(apiRes);
         }
     }
 }
