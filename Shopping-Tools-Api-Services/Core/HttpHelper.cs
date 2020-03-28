@@ -23,8 +23,7 @@ namespace Shopping_Tools_Api_Services.Core
                 return htmlDoc;
             }
 
-            //string apiKey = Environment.GetEnvironmentVariable("SCRAPERAPIKEY");
-            string apiKey = "5f1c929bc06a341c9752b18a361cdc4f";
+            string apiKey = Environment.GetEnvironmentVariable("SCRAPERAPIKEY");
             if (string.IsNullOrEmpty(apiKey))
                 throw new Exception("Environment variable 'SCRAPERAPIKEY' not set.");
 
